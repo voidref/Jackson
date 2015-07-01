@@ -11,6 +11,8 @@
 		E7197D9A1B43BFBA0020F569 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E7197D991B43BFBA0020F569 /* Images.xcassets */; };
 		E7197D9D1B43BFBA0020F569 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = E7197D9B1B43BFBA0020F569 /* MainMenu.xib */; };
 		E7197DA91B43BFBA0020F569 /* JacksonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7197DA81B43BFBA0020F569 /* JacksonTests.swift */; };
+		E7197DB31B43C1610020F569 /* JacksonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7197DB21B43C1610020F569 /* JacksonViewController.swift */; };
+		E7197DB51B43C44C0020F569 /* JacksonMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7197DB41B43C44C0020F569 /* JacksonMainView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,6 +34,8 @@
 		E7197DA21B43BFBA0020F569 /* JacksonTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JacksonTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7197DA71B43BFBA0020F569 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E7197DA81B43BFBA0020F569 /* JacksonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JacksonTests.swift; sourceTree = "<group>"; };
+		E7197DB21B43C1610020F569 /* JacksonViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JacksonViewController.swift; sourceTree = "<group>"; };
+		E7197DB41B43C44C0020F569 /* JacksonMainView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JacksonMainView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +78,8 @@
 			isa = PBXGroup;
 			children = (
 				E7197D971B43BFBA0020F569 /* AppDelegate.swift */,
+				E7197DB21B43C1610020F569 /* JacksonViewController.swift */,
+				E7197DB41B43C44C0020F569 /* JacksonMainView.swift */,
 				E7197D991B43BFBA0020F569 /* Images.xcassets */,
 				E7197D9B1B43BFBA0020F569 /* MainMenu.xib */,
 				E7197D951B43BFBA0020F569 /* Supporting Files */,
@@ -205,6 +211,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E7197DB31B43C1610020F569 /* JacksonViewController.swift in Sources */,
+				E7197DB51B43C44C0020F569 /* JacksonMainView.swift in Sources */,
 				E7197D981B43BFBA0020F569 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
