@@ -21,7 +21,11 @@ class JacksonViewController: NSViewController, SongUpdateDelegate, NSTableViewDa
     
     private var player:AVAudioPlayer?
     private var nextPlayer:AVAudioPlayer?
-    private var songIndex = 0
+    private var songIndex = 0 {
+        didSet {
+            tableView.selectRowIndexes(NSIndexSet(index: songIndex - 1), byExtendingSelection: false)
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,25 +76,30 @@ class JacksonViewController: NSViewController, SongUpdateDelegate, NSTableViewDa
         }
         updatePlayPause()
     }
-    
+
+    @IBAction func nextClicked(button:NSButton) {
+        advanceToNextSong()
+    }
+
     // MARK: - AVAudioPlayer
     
     private func startPlayer() {
         if nil == player && mainView.songPaths.count > 0 {
             
-            songIndex = 0
-            
-            while player == nil && songIndex < mainView.songPaths.count {
+            var index = 0
+            while player == nil && index < mainView.songPaths.count {
                 player = avPlayerForSongIndex(songIndex)
-                songIndex++
+                index++
             }
             
             player?.play()
             updatePlayPause()
 
-            if mainView.songPaths.count > songIndex {
-                nextPlayer = avPlayerForSongIndex(songIndex)
+            if mainView.songPaths.count > index {
+                nextPlayer = avPlayerForSongIndex(index)
             }
+            
+            songIndex = index
         }
     }
     
@@ -107,7 +116,11 @@ class JacksonViewController: NSViewController, SongUpdateDelegate, NSTableViewDa
         return result
     }
     
-    func audioPlayerDidFinishPlaying(_: AVAudioPlayer!, successfully flag: Bool) {
+    func audioPlayerDidFinishPlaying(player: AVAudioPlayer!, successfully flag: Bool) {
+        advanceToNextSong()
+    }
+    
+    func advanceToNextSong() {
         songIndex++
         
         player = nextPlayer
@@ -116,7 +129,7 @@ class JacksonViewController: NSViewController, SongUpdateDelegate, NSTableViewDa
         if songIndex == mainView.songPaths.count {
             songIndex = 0
         }
-     
+        
         nextPlayer = avPlayerForSongIndex(songIndex)
     }
     
