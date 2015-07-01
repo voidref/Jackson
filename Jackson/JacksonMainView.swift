@@ -8,13 +8,17 @@
 
 import Cocoa
 
-protocol SongUpdateDelegate {
+protocol SongDelegate {
     func songsUpdated()
+}
+
+protocol TableViewRowSelectionDelegate {
+    func tableView(tableView:NSTableView, rowSelected:Int)
 }
 
 class JacksonMainView: NSView {
 
-    var songDelegate:SongUpdateDelegate?
+    var songDelegate:SongDelegate?
     var songPaths:[String] = []
     override func drawRect(dirtyRect: NSRect) {
         super.drawRect(dirtyRect)
@@ -67,4 +71,5 @@ class JacksonMainView: NSView {
     override func viewWillMoveToWindow(newWindow: NSWindow?) {
         registerForDraggedTypes([NSFilenamesPboardType])
     }
+    
 }
