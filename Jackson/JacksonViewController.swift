@@ -9,7 +9,7 @@
 import Cocoa
 import AVFoundation
 
-class JacksonViewController: NSViewController, SongUpdateDelegate, NSTableViewDataSource, NSTableViewDelegate, AVAudioPlayerDelegate {
+class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSource, NSTableViewDelegate, AVAudioPlayerDelegate, TableViewRowSelectionDelegate {
 
     @IBOutlet var tableView:NSTableView!
     @IBOutlet var playPause:NSButton!
@@ -23,7 +23,8 @@ class JacksonViewController: NSViewController, SongUpdateDelegate, NSTableViewDa
     private var nextPlayer:AVAudioPlayer?
     private var songIndex = 0 {
         didSet {
-            tableView.selectRowIndexes(NSIndexSet(index: songIndex - 1), byExtendingSelection: false)
+            tableView.selectRowIndexes(NSIndexSet(index: songIndex), byExtendingSelection: false)
+            tableView.scrollRowToVisible(songIndex)
         }
     }
     
@@ -33,6 +34,8 @@ class JacksonViewController: NSViewController, SongUpdateDelegate, NSTableViewDa
         
         mainView.registerForDraggedTypes([NSFilenamesPboardType])
         mainView.songDelegate = self
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "tableSelectionChanged:", name: NSTableViewSelectionDidChangeNotification, object: tableView)
     }
     
     // MARK: - Song Delegate 
@@ -63,6 +66,26 @@ class JacksonViewController: NSViewController, SongUpdateDelegate, NSTableViewDa
         return field
     }
         
+    func tableView(tableView: NSTableView, shouldSelectRow row: Int) -> Bool {
+        return true
+    }
+    
+    func tableView(tableView:NSTableView, rowSelected:Int) {
+        
+    }
+    
+    func tableSelectionChanged(note:NSNotification) {
+        var index = tableView.selectedRow
+        
+        if index != songIndex {
+            nextPlayer = avPlayerForSongIndex(index)
+            // Bit of a hack, advance updates the index, so we have to pretend we were on the previous one.
+            songIndex = index - 1
+            
+            advanceToNextSong()
+        }
+    }
+    
     // MARK: - Actions
     
     @IBAction func playPauseClicked(button:NSButton) {
@@ -99,7 +122,7 @@ class JacksonViewController: NSViewController, SongUpdateDelegate, NSTableViewDa
                 nextPlayer = avPlayerForSongIndex(index)
             }
             
-            songIndex = index
+            songIndex = 0
         }
     }
     
@@ -130,7 +153,12 @@ class JacksonViewController: NSViewController, SongUpdateDelegate, NSTableViewDa
             songIndex = 0
         }
         
-        nextPlayer = avPlayerForSongIndex(songIndex)
+        var nextIndex = songIndex + 1
+        if nextIndex == mainView.songPaths.count {
+            nextIndex = 0
+        }
+        
+        nextPlayer = avPlayerForSongIndex(nextIndex)
     }
     
     func updatePlayPause() {
