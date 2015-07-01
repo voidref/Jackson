@@ -31,8 +31,7 @@ class JacksonMainView: NSView {
             var isDir:ObjCBool = false
             if NSFileManager.defaultManager().fileExistsAtPath(pathStr, isDirectory: &isDir) {
                 if isDir.boolValue == true {
-                    Swift.print(pathStr)
-                    return NSDragOperation.Generic
+                    return NSDragOperation.Copy
                 }
             }
         }
@@ -49,8 +48,9 @@ class JacksonMainView: NSView {
             
             if let paths = NSFileManager.defaultManager().subpathsOfDirectoryAtPath(pathStr, error: nil) as? [String] {
                 for path in paths {
-                    if path.pathExtension == "m4a" {
-                        songPaths.append(path)
+                    let ext = path.pathExtension.lowercaseString
+                    if ext == "m4a" || ext == "mp3" {
+                        songPaths.append(pathStr.stringByAppendingPathComponent(path))
                     }
                 }
             }

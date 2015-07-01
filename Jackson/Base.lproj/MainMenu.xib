@@ -665,6 +665,7 @@
         </menu>
         <viewController id="uyG-Sh-hDj" customClass="JacksonViewController" customModule="Jackson" customModuleProvider="target">
             <connections>
+                <outlet property="playPause" destination="gdc-Y6-6SM" id="j7d-M8-6h6"/>
                 <outlet property="tableView" destination="0sL-EM-kys" id="7CF-ep-FnJ"/>
                 <outlet property="view" destination="EiT-Mj-1SZ" id="gJ9-fZ-oQB"/>
             </connections>
@@ -709,11 +710,11 @@
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aCz-ka-cC1">
-                                                            <rect key="frame" x="2" y="-1" width="100" height="28"/>
-                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="Y9y-Q8-V1b">
+                                                            <rect key="frame" x="-2" y="0.0" width="477" height="26"/>
+                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="Table View Cell" id="Y9y-Q8-V1b">
                                                                 <font key="font" metaFont="system"/>
                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                             </textFieldCell>
                                                         </textField>
                                                     </subviews>
@@ -741,6 +742,16 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
+                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gdc-Y6-6SM">
+                        <rect key="frame" x="20" y="322" width="58" height="21"/>
+                        <buttonCell key="cell" type="bevel" title="Play" bezelStyle="regularSquare" alignment="center" imageScaling="proportionallyDown" inset="2" id="EYV-el-4EV">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="playPauseClicked:" target="uyG-Sh-hDj" id="diU-rj-GLn"/>
+                        </connections>
+                    </button>
                 </subviews>
                 <constraints>
                     <constraint firstItem="dzR-hu-UQp" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="59" id="2IF-fW-H3G"/>
