@@ -9,23 +9,13 @@
 import Cocoa
 
 protocol SongDelegate {
-    func songsUpdated()
-}
-
-protocol TableViewRowSelectionDelegate {
-    func tableView(tableView:NSTableView, rowSelected:Int)
+    func addSongPaths(paths:[String])
 }
 
 class JacksonMainView: NSView {
 
     var songDelegate:SongDelegate?
-    var songPaths:[String] = []
-    override func drawRect(dirtyRect: NSRect) {
-        super.drawRect(dirtyRect)
 
-        // Drawing code here.
-    }
-    
     override func draggingEntered(sender: NSDraggingInfo) -> NSDragOperation {
         let pboard = sender.draggingPasteboard()
         
@@ -47,29 +37,25 @@ class JacksonMainView: NSView {
         
         let pboard = sender.draggingPasteboard()
         
+        var songPaths:[String] = []
         for path in pboard.propertyListForType(NSFilenamesPboardType) as! NSArray {
             let pathStr = path as! String
             
             if let paths = NSFileManager.defaultManager().subpathsOfDirectoryAtPath(pathStr, error: nil) as? [String] {
                 for path in paths {
                     let ext = path.pathExtension.lowercaseString
-                    if ext == "m4a" || ext == "mp3" {
+                    if ext == "m4a" || ext == "mp3" || ext == "aac" {
                         songPaths.append(pathStr.stringByAppendingPathComponent(path))
                     }
                 }
             }
         }
         
-        songDelegate?.songsUpdated()
+        songDelegate?.addSongPaths(songPaths)
         return true
     }
     
     override func prepareForDragOperation(sender: NSDraggingInfo) -> Bool {
         return true
     }
-    
-    override func viewWillMoveToWindow(newWindow: NSWindow?) {
-        registerForDraggedTypes([NSFilenamesPboardType])
-    }
-    
 }

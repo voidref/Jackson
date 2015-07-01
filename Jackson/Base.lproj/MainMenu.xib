@@ -680,7 +680,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <scrollView autohidesScrollers="YES" horizontalLineScroll="26" horizontalPageScroll="10" verticalLineScroll="26" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dzR-hu-UQp">
-                        <rect key="frame" x="20" y="20" width="485" height="284"/>
+                        <rect key="frame" x="20" y="20" width="485" height="288"/>
                         <clipView key="contentView" id="1nM-us-bd5">
                             <rect key="frame" x="1" y="17" width="238" height="117"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -742,8 +742,12 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
-                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gdc-Y6-6SM">
-                        <rect key="frame" x="20" y="319" width="64" height="27"/>
+                    <button translatesAutoresizingMaskIntoConstraints="NO" id="gdc-Y6-6SM">
+                        <rect key="frame" x="20" y="321" width="76" height="22"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="76" id="Bc2-jH-cuh"/>
+                            <constraint firstAttribute="height" constant="22" id="dP0-u7-Mu2"/>
+                        </constraints>
                         <buttonCell key="cell" type="bevel" title="Play" bezelStyle="regularSquare" alignment="center" imageScaling="proportionallyDown" inset="2" id="EYV-el-4EV">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -752,21 +756,13 @@
                             <action selector="playPauseClicked:" target="uyG-Sh-hDj" id="diU-rj-GLn"/>
                         </connections>
                     </button>
-                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kzr-pL-BlQ">
-                        <rect key="frame" x="92" y="322" width="70" height="21"/>
-                        <buttonCell key="cell" type="bevel" title="Next" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="gvP-tR-afC">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="nextClicked:" target="uyG-Sh-hDj" id="j7f-Ty-gPg"/>
-                        </connections>
-                    </button>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="dzR-hu-UQp" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="59" id="2IF-fW-H3G"/>
                     <constraint firstItem="dzR-hu-UQp" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" symbolic="YES" id="76w-uu-2HT"/>
+                    <constraint firstItem="gdc-Y6-6SM" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="20" id="A9f-RX-mKz"/>
+                    <constraint firstItem="gdc-Y6-6SM" firstAttribute="leading" secondItem="dzR-hu-UQp" secondAttribute="leading" id="Cin-Kr-GBT"/>
                     <constraint firstAttribute="bottom" secondItem="dzR-hu-UQp" secondAttribute="bottom" constant="20" symbolic="YES" id="bre-r6-VZ5"/>
+                    <constraint firstItem="dzR-hu-UQp" firstAttribute="top" secondItem="gdc-Y6-6SM" secondAttribute="bottom" constant="13" id="iMH-1r-xrQ"/>
                     <constraint firstAttribute="trailing" secondItem="dzR-hu-UQp" secondAttribute="trailing" constant="15" id="zue-I0-BLa"/>
                 </constraints>
             </view>

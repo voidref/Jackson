@@ -9,10 +9,11 @@
 import Cocoa
 import AVFoundation
 
-class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSource, NSTableViewDelegate, AVAudioPlayerDelegate, TableViewRowSelectionDelegate {
+class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSource, NSTableViewDelegate, AVAudioPlayerDelegate {
 
     @IBOutlet var tableView:NSTableView!
     @IBOutlet var playPause:NSButton!
+    
     var mainView:JacksonMainView {
         get {
             return view as! JacksonMainView
@@ -27,6 +28,7 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
             tableView.scrollRowToVisible(songIndex)
         }
     }
+    private var songPaths:[String] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,16 +42,20 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     
     // MARK: - Song Delegate 
     
-    func songsUpdated() {
-        tableView.reloadData()
+    func addSongPaths(paths: [String]) {
         
+        songPaths = Array<String>((Set(songPaths).union(paths)))
+        
+        sortSongs()
+        
+        tableView.reloadData()
         startPlayer()
     }
     
     // MARK: - TableViewness
     
     func numberOfRowsInTableView(tableView: NSTableView) -> Int {
-        return mainView.songPaths.count
+        return songPaths.count
     }
 
     func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
@@ -61,7 +67,7 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
             field?.identifier = "rowView"
         }
         
-        field?.stringValue = mainView.songPaths[row].lastPathComponent.stringByDeletingPathExtension
+        field?.stringValue = songPaths[row].lastPathComponent.stringByDeletingPathExtension
         
         return field
     }
@@ -107,10 +113,10 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     // MARK: - AVAudioPlayer
     
     private func startPlayer() {
-        if nil == player && mainView.songPaths.count > 0 {
+        if nil == player && songPaths.count > 0 {
             
             var index = 0
-            while player == nil && index < mainView.songPaths.count {
+            while player == nil && index < songPaths.count {
                 player = avPlayerForSongIndex(songIndex)
                 index++
             }
@@ -118,7 +124,7 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
             player?.play()
             updatePlayPause()
 
-            if mainView.songPaths.count > index {
+            if songPaths.count > index {
                 nextPlayer = avPlayerForSongIndex(index)
             }
             
@@ -128,7 +134,7 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     
     func avPlayerForSongIndex(index: Int) -> AVAudioPlayer? {
         var result:AVAudioPlayer?
-        if let url = NSURL(fileURLWithPath: mainView.songPaths[index]) {
+        if let url = NSURL(fileURLWithPath: songPaths[index]) {
             var error:NSError?
             result = AVAudioPlayer(contentsOfURL: url, error: &error)
             
@@ -145,6 +151,12 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     
     // MARK: - Private
     
+    private func sortSongs() {
+        songPaths.sort { (lhs, rhs) -> Bool in
+            return lhs < rhs
+        }
+    }
+    
     private func advanceToNextSong() {
         songIndex++
 
@@ -155,12 +167,12 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
             player?.play()
         }
         
-        if songIndex == mainView.songPaths.count {
+        if songIndex == songPaths.count {
             songIndex = 0
         }
         
         var nextIndex = songIndex + 1
-        if nextIndex == mainView.songPaths.count {
+        if nextIndex == songPaths.count {
             nextIndex = 0
         }
         
