@@ -143,11 +143,17 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
         advanceToNextSong()
     }
     
-    func advanceToNextSong() {
+    // MARK: - Private
+    
+    private func advanceToNextSong() {
         songIndex++
-        
+
+        let playing = player?.playing
         player = nextPlayer
-        player?.play()
+        
+        if let playingActual = playing where playingActual == true {
+            player?.play()
+        }
         
         if songIndex == mainView.songPaths.count {
             songIndex = 0
@@ -161,7 +167,7 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
         nextPlayer = avPlayerForSongIndex(nextIndex)
     }
     
-    func updatePlayPause() {
+    private func updatePlayPause() {
         if let player = player {
             if player.playing {
                 playPause.title = NSLocalizedString("Pause", comment: "pause button title")
