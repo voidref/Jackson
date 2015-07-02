@@ -13,6 +13,9 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
 
     @IBOutlet var tableView:NSTableView!
     @IBOutlet var playPause:NSButton!
+    @IBOutlet var progressBar:NSSlider!
+    @IBOutlet var totalTime:NSTextField!
+    @IBOutlet var currentTime:NSTextField!
     
     var mainView:JacksonMainView {
         get {
