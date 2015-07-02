@@ -23,15 +23,40 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
         }
     }
     
-    private var player:AVAudioPlayer?
+    private var player:AVAudioPlayer? { 
+        didSet {
+            if let player = player {
+                totalTime.stringValue = timeFormatter.stringFromTimeInterval(player.duration)!
+                currentTime.stringValue = timeFormatter.stringFromTimeInterval(player.currentTime)!
+                progressBar.enabled = true
+                progressBar.maxValue = player.duration
+                progressBar.doubleValue = 0
+                
+                if nil == updatePoller {
+                    updatePoller = NSTimer.scheduledTimerWithTimeInterval(1.0 / 20.0, target: self, selector: "updateDisplay", userInfo: nil, repeats: true)
+                }
+            }
+        }
+    }
+    
     private var nextPlayer:AVAudioPlayer?
+    private var songPaths:[String] = []
+    private var updatePoller:NSTimer?
+    
+    private lazy var timeFormatter:NSDateComponentsFormatter = {
+        var formatter = NSDateComponentsFormatter()
+        formatter.unitsStyle = .Positional
+        formatter.zeroFormattingBehavior = .Pad
+        formatter.allowedUnits = .CalendarUnitMinute | .CalendarUnitSecond           
+        return formatter
+    }()
+    
     private var songIndex = 0 {
         didSet {
             tableView.selectRowIndexes(NSIndexSet(index: songIndex), byExtendingSelection: false)
             tableView.scrollRowToVisible(songIndex)
         }
     }
-    private var songPaths:[String] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,6 +66,11 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
         mainView.songDelegate = self
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "tableSelectionChanged:", name: NSTableViewSelectionDidChangeNotification, object: tableView)
+        totalTime.stringValue = ""
+        currentTime.stringValue = ""
+        progressBar.doubleValue = 0
+        progressBar.maxValue = 0
+        progressBar.enabled = false
     }
     
     // MARK: - Song Delegate 
@@ -109,10 +139,11 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
         updatePlayPause()
     }
 
-    @IBAction func nextClicked(button:NSButton) {
-        advanceToNextSong()
+    @IBAction func sliderClicked(sender:NSSlider) {
+        currentTime.stringValue = timeFormatter.stringFromTimeInterval(sender.doubleValue)!
+        player?.currentTime = sender.doubleValue
     }
-
+    
     // MARK: - AVAudioPlayer
     
     private func startPlayer() {
@@ -190,6 +221,13 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
             else {
                 playPause.title = NSLocalizedString("Play", comment: "play button title")
             }
+        }
+    }
+    
+    @objc private func updateDisplay() {
+        if let player = player {
+            currentTime.stringValue = timeFormatter.stringFromTimeInterval(player.currentTime)!
+            progressBar.doubleValue = player.currentTime
         }
     }
 }

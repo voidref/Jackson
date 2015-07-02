@@ -262,6 +262,9 @@
                     <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gqI-ul-EIh">
                         <rect key="frame" x="102" y="322" width="400" height="21"/>
                         <sliderCell key="cell" state="on" alignment="left" maxValue="100" tickMarkPosition="above" sliderType="linear" id="skR-70-kcM"/>
+                        <connections>
+                            <action selector="sliderClicked:" target="uyG-Sh-hDj" id="wak-HK-ftr"/>
+                        </connections>
                     </slider>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tBc-iZ-fFx">
                         <rect key="frame" x="102" y="308" width="38" height="17"/>
