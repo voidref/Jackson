@@ -42,6 +42,7 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     private var nextPlayer:AVAudioPlayer?
     private var songPaths:[String] = []
     private var updatePoller:NSTimer?
+    private var playing = false
     
     private lazy var timeFormatter:NSDateComponentsFormatter = {
         var formatter = NSDateComponentsFormatter()
@@ -135,6 +136,8 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
             else {
                 player.play()
             }
+            
+            playing = player.playing
         }
         updatePlayPause()
     }
@@ -194,10 +197,9 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     private func advanceToNextSong() {
         songIndex++
 
-        let playing = player?.playing
         player = nextPlayer
         
-        if let playingActual = playing where playingActual == true {
+        if playing {
             player?.play()
         }
         
@@ -221,6 +223,8 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
             else {
                 playPause.title = NSLocalizedString("Play", comment: "play button title")
             }
+            
+            playing = player.playing
         }
     }
     
