@@ -106,6 +106,7 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
             field = NSTextField(frame: NSZeroRect)
             field?.bordered = false
             field?.identifier = "rowView"
+            field?.editable = false
         }
         
         field?.stringValue = songPaths[row].lastPathComponent.stringByDeletingPathExtension
