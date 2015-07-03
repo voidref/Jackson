@@ -8,6 +8,85 @@
 
 import Cocoa
 import AVFoundation
+import AudioToolbox
+
+
+struct SongData : Printable, Comparable, Hashable {
+    var path:String
+    var track:Int?
+    var album:String?
+    
+    var description:String {
+        get {
+            return "\(path.lastPathComponent) / \(track) / \(album)"
+        }
+    }
+    
+    var hashValue: Int {
+        get {
+            return path.hashValue
+        }
+    }
+
+    init(path:String) {
+        self.path = path
+        
+        var fileID:AudioFileID = nil
+        let url = NSURL(fileURLWithPath: path)! as CFURL
+        AudioFileOpenURL(url, Int8(kAudioFileReadPermission), AudioFileTypeID(0), &fileID)
+        
+        if fileID != nil {
+            var dict:CFDictionary = [:] as CFDictionary 
+            var piDataSize:UInt32 = UInt32(sizeof(CFDictionaryRef.Type))
+            
+            //  Populates a CFDictionary with the ID3 tag properties
+            let err = AudioFileGetProperty(fileID, AudioFilePropertyID(kAudioFilePropertyInfoDictionary), &piDataSize, &dict)
+            
+            let info = dict as Dictionary
+
+            if let trackFuckery = info[kAFInfoDictionary_TrackNumber] as? String {
+                let trackInfo = trackFuckery.componentsSeparatedByString("/")
+                track = trackInfo[0].toInt()
+            }
+            
+            album = info[kAFInfoDictionary_Album] as? String
+        }
+    }
+}
+
+func ==(lhs:SongData, rhs:SongData) -> Bool {
+    return lhs.path == rhs.path &&
+        lhs.track == rhs.track &&
+        lhs.album == lhs.album
+}
+
+func <(lhs:SongData, rhs:SongData) -> Bool {
+    if let aLeft = lhs.album {
+        if let aRight = rhs.album {
+            if let tLeft = lhs.track {
+                if let tRight = rhs.track {
+                    if aRight == aLeft {
+                        return tLeft < tRight
+                    }
+                    else {
+                        return aLeft < aRight
+                    }
+                }
+            }
+            else if let tRight = rhs.track {
+                return false
+            }
+            else {
+                return aLeft < aRight
+            }
+        }
+    }
+    else if let aRight = rhs.album {
+        return false
+    }
+        
+    return lhs.path < rhs.path
+}
 
 class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSource, NSTableViewDelegate, AVAudioPlayerDelegate {
 
@@ -40,7 +119,7 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     }
     
     private var nextPlayer:AVAudioPlayer?
-    private var songPaths:[String] = []
+    private var songs:[SongData] = []
     private var updatePoller:NSTimer?
     private var playing = false
     
@@ -84,9 +163,9 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     // MARK: - Song Delegate 
     
     func addSongPaths(paths: [String]) {
-        
-        songPaths = Array<String>((Set(songPaths).union(paths)))
-        
+        let data = paths.map { SongData(path: $0) }
+        let songSet = Set(songs)
+        songs = Array<SongData>(songSet.union(data))
         sortSongs()
         
         tableView.reloadData()
@@ -96,7 +175,7 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     // MARK: - TableViewness
     
     func numberOfRowsInTableView(tableView: NSTableView) -> Int {
-        return songPaths.count
+        return songs.count
     }
 
     func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
@@ -109,7 +188,7 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
             field?.editable = false
         }
         
-        field?.stringValue = songPaths[row].lastPathComponent.stringByDeletingPathExtension
+        field?.stringValue = songs[row].path.lastPathComponent.stringByDeletingPathExtension
         
         return field
     }
@@ -158,10 +237,10 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     // MARK: - AVAudioPlayer
     
     private func startPlayer() {
-        if nil == player && songPaths.count > 0 {
+        if nil == player && songs.count > 0 {
             
             var index = 0
-            while player == nil && index < songPaths.count {
+            while player == nil && index < songs.count {
                 player = avPlayerForSongIndex(songIndex)
                 index++
             }
@@ -169,7 +248,7 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
             player?.play()
             updatePlayPause()
 
-            if songPaths.count > index {
+            if songs.count > index {
                 nextPlayer = avPlayerForSongIndex(index)
             }
             
@@ -179,7 +258,7 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     
     func avPlayerForSongIndex(index: Int) -> AVAudioPlayer? {
         var result:AVAudioPlayer?
-        if let url = NSURL(fileURLWithPath: songPaths[index]) {
+        if let url = NSURL(fileURLWithPath: songs[index].path) {
             var error:NSError?
             result = AVAudioPlayer(contentsOfURL: url, error: &error)
             
@@ -197,7 +276,7 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     // MARK: - Private
     
     private func sortSongs() {
-        songPaths.sort { (lhs, rhs) -> Bool in
+        songs.sort { (lhs, rhs) -> Bool in
             return lhs < rhs
         }
     }
@@ -211,12 +290,12 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
             player?.play()
         }
         
-        if songIndex == songPaths.count {
+        if songIndex == songs.count {
             songIndex = 0
         }
         
         var nextIndex = songIndex + 1
-        if nextIndex == songPaths.count {
+        if nextIndex == songs.count {
             nextIndex = 0
         }
         
@@ -238,7 +317,7 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     
     private func deleteSelectedSong() {
         if tableView.selectedRow != NSNotFound {
-            songPaths.removeAtIndex(tableView.selectedRow)
+            songs.removeAtIndex(tableView.selectedRow)
             songIndex--
             tableView.reloadData()
             advanceToNextSong()
