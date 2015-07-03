@@ -105,20 +105,17 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="View" id="H8h-7b-M4v">
+                <menuItem title="Edit" id="HdJ-Lc-8wW">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="View" id="HyV-fh-RgO">
+                    <menu key="submenu" title="Edit" id="Ab8-kJ-A4L">
                         <items>
-                            <menuItem title="Show Toolbar" keyEquivalent="t" id="snW-S8-Cw5">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="toggleToolbarShown:" target="-1" id="BXY-wc-z0C"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Customize Toolbar…" id="1UK-8n-QPP">
+                            <menuItem title="Delete" id="Art-pd-XKN">
+                                <string key="keyEquivalent" base64-UTF8="YES">
+CA
+</string>
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="runToolbarCustomizationPalette:" target="-1" id="pQI-g3-MTW"/>
+                                    <action selector="deleteBackward:" target="-1" id="ftX-MM-k54"/>
                                 </connections>
                             </menuItem>
                         </items>
@@ -255,9 +252,6 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
-                        <connections>
-                            <action selector="playPauseClicked:" target="uyG-Sh-hDj" id="diU-rj-GLn"/>
-                        </connections>
                     </button>
                     <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gqI-ul-EIh">
                         <rect key="frame" x="102" y="322" width="400" height="21"/>
@@ -296,7 +290,7 @@
                     <constraint firstAttribute="trailing" secondItem="dzR-hu-UQp" secondAttribute="trailing" constant="15" id="zue-I0-BLa"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="339" y="250.5"/>
+            <point key="canvasLocation" x="276" y="14.5"/>
         </window>
     </objects>
 </document>

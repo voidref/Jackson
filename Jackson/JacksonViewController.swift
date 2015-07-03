@@ -59,6 +59,9 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
         }
     }
     
+    // MARK: - Overrides
+    override var acceptsFirstResponder:Bool { get { return true } }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.
@@ -72,6 +75,10 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
         progressBar.doubleValue = 0
         progressBar.maxValue = 0
         progressBar.enabled = false
+    }
+
+    override func deleteBackward(sender: AnyObject?) {
+        deleteSelectedSong()
     }
     
     // MARK: - Song Delegate 
@@ -225,6 +232,15 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
             }
             
             playing = player.playing
+        }
+    }
+    
+    private func deleteSelectedSong() {
+        if tableView.selectedRow != NSNotFound {
+            songPaths.removeAtIndex(tableView.selectedRow)
+            songIndex--
+            tableView.reloadData()
+            advanceToNextSong()
         }
     }
     
