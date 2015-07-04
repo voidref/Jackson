@@ -95,6 +95,7 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     @IBOutlet var progressBar:NSSlider!
     @IBOutlet var totalTime:NSTextField!
     @IBOutlet var currentTime:NSTextField!
+    @IBOutlet var playMenuItem:NSMenuItem!
     
     var mainView:JacksonMainView {
         get {
@@ -140,6 +141,15 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     
     // MARK: - Overrides
     override var acceptsFirstResponder:Bool { get { return true } }
+    
+    override func keyUp(theEvent: NSEvent) {
+        if theEvent.keyCode == 49 {
+            togglePlayPause()
+        }
+        else {
+            super.keyUp(theEvent)
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -215,18 +225,12 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     
     // MARK: - Actions
     
+    @IBAction func playMenuInvoked(sender: NSMenuItem) {
+        togglePlayPause()
+    }
+
     @IBAction func playPauseClicked(button:NSButton) {
-        if let player = player {
-            if player.playing {
-                player.pause()
-            }
-            else {
-                player.play()
-            }
-            
-            playing = player.playing
-        }
-        updatePlayPause()
+        togglePlayPause()
     }
 
     @IBAction func sliderClicked(sender:NSSlider) {
@@ -304,13 +308,13 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     
     private func updatePlayPause() {
         if let player = player {
+            var title = NSLocalizedString("Play", comment: "play button title")
             if player.playing {
-                playPause.title = NSLocalizedString("Pause", comment: "pause button title")
-            }
-            else {
-                playPause.title = NSLocalizedString("Play", comment: "play button title")
+                title = NSLocalizedString("Pause", comment: "pause button title")
             }
             
+            playPause.title = title
+            playMenuItem.title = title
             playing = player.playing
         }
     }
@@ -329,5 +333,19 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
             currentTime.stringValue = timeFormatter.stringFromTimeInterval(player.currentTime)!
             progressBar.doubleValue = player.currentTime
         }
+    }
+    
+    private func togglePlayPause() {
+        if let player = player {
+            if player.playing {
+                player.pause()
+            }
+            else {
+                player.play()
+            }
+            
+            playing = player.playing
+        }
+        updatePlayPause()        
     }
 }

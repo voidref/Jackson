@@ -86,6 +86,13 @@
                                 </menu>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="m54-Is-iLE"/>
+                            <menuItem title="Play" keyEquivalent=" " id="Zie-1r-Y16">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="playMenuInvoked:" target="-1" id="vQ0-tS-su6"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="R4v-ca-4cV"/>
                             <menuItem title="Save…" keyEquivalent="s" id="pxx-59-PXV">
                                 <connections>
                                     <action selector="saveDocument:" target="-1" id="teZ-XB-qJY"/>
@@ -163,6 +170,7 @@ CA
         <viewController id="uyG-Sh-hDj" customClass="JacksonViewController" customModule="Jackson" customModuleProvider="target">
             <connections>
                 <outlet property="currentTime" destination="tBc-iZ-fFx" id="GS1-bA-EVS"/>
+                <outlet property="playMenuItem" destination="Zie-1r-Y16" id="vqq-sj-JbJ"/>
                 <outlet property="playPause" destination="gdc-Y6-6SM" id="j7d-M8-6h6"/>
                 <outlet property="progressBar" destination="gqI-ul-EIh" id="LPH-Dn-zK6"/>
                 <outlet property="tableView" destination="0sL-EM-kys" id="7CF-ep-FnJ"/>
@@ -290,7 +298,7 @@ CA
                     <constraint firstAttribute="trailing" secondItem="dzR-hu-UQp" secondAttribute="trailing" constant="15" id="zue-I0-BLa"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="276" y="14.5"/>
+            <point key="canvasLocation" x="282" y="106.5"/>
         </window>
     </objects>
 </document>
