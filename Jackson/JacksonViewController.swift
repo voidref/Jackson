@@ -303,7 +303,13 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
             nextIndex = 0
         }
         
-        nextPlayer = avPlayerForSongIndex(nextIndex)
+        if songs.count > 0 {
+            nextPlayer = avPlayerForSongIndex(nextIndex)
+        }
+        else {
+            nextPlayer = nil
+            player = nil
+        }
     }
     
     private func updatePlayPause() {
@@ -320,7 +326,7 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     }
     
     private func deleteSelectedSong() {
-        if tableView.selectedRow != NSNotFound {
+        if tableView.selectedRow != -1 {
             songs.removeAtIndex(tableView.selectedRow)
             songIndex--
             tableView.reloadData()
