@@ -225,6 +225,10 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     
     // MARK: - Actions
     
+    @IBAction func showInFinderMenuInvoked(sender: NSMenuItem) {
+        showCurrentSongInFinder()
+    }
+    
     @IBAction func playMenuInvoked(sender: NSMenuItem) {
         togglePlayPause()
     }
@@ -353,5 +357,12 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
             playing = player.playing
         }
         updatePlayPause()        
+    }
+    
+    private func showCurrentSongInFinder() {
+        if songs.count < 1 { return }
+        
+        let item = songs[songIndex]
+        NSWorkspace.sharedWorkspace().selectFile(item.path, inFileViewerRootedAtPath: "")
     }
 }

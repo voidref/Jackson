@@ -85,37 +85,20 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="m54-Is-iLE"/>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Song" id="e6N-uJ-72z">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Song" id="vIl-uI-LVZ">
+                        <items>
                             <menuItem title="Play" keyEquivalent=" " id="Zie-1r-Y16">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="playMenuInvoked:" target="-1" id="vQ0-tS-su6"/>
                                 </connections>
                             </menuItem>
-                            <menuItem isSeparatorItem="YES" id="R4v-ca-4cV"/>
-                            <menuItem title="Save…" keyEquivalent="s" id="pxx-59-PXV">
-                                <connections>
-                                    <action selector="saveDocument:" target="-1" id="teZ-XB-qJY"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Save As…" keyEquivalent="S" id="Bw7-FT-i3A">
-                                <connections>
-                                    <action selector="saveDocumentAs:" target="-1" id="mDf-zr-I0C"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Revert to Saved" id="KaW-ft-85H">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="revertDocumentToSaved:" target="-1" id="iJ3-Pv-kwq"/>
-                                </connections>
-                            </menuItem>
-                        </items>
-                    </menu>
-                </menuItem>
-                <menuItem title="Edit" id="HdJ-Lc-8wW">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Edit" id="Ab8-kJ-A4L">
-                        <items>
+                            <menuItem isSeparatorItem="YES" id="sa0-ov-to4"/>
                             <menuItem title="Delete" id="Art-pd-XKN">
                                 <string key="keyEquivalent" base64-UTF8="YES">
 CA
@@ -123,6 +106,15 @@ CA
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="deleteBackward:" target="-1" id="ftX-MM-k54"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Show in Finder" id="pS4-T0-M9j">
+                                <string key="keyEquivalent" base64-UTF8="YES">
+DQ
+</string>
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="showInFinderMenuInvoked:" target="uyG-Sh-hDj" id="xVn-Yj-Cok"/>
                                 </connections>
                             </menuItem>
                         </items>
@@ -298,7 +290,7 @@ CA
                     <constraint firstAttribute="trailing" secondItem="dzR-hu-UQp" secondAttribute="trailing" constant="15" id="zue-I0-BLa"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="282" y="106.5"/>
+            <point key="canvasLocation" x="6" y="-197.5"/>
         </window>
     </objects>
 </document>
