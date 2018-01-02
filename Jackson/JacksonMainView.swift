@@ -58,7 +58,6 @@ class JacksonMainView: NSView {
                 let urls = FileManager.default.suburls(at: dirURL) {
                 for url in urls {
                     let ext = url.pathExtension.lowercased()
-                    print(ext)
                     if ext == "m4a" || ext == "mp3" || ext == "aac" {
                         songURLs.append(url)
                     }
