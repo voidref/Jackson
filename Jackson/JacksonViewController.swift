@@ -10,52 +10,52 @@ import Cocoa
 import AVFoundation
 import AudioToolbox
 
-
-struct SongData : Printable, Comparable, Hashable {
-    var path:String
+// MARK: Model Item
+struct SongData : CustomStringConvertible, Comparable, Hashable {
+    var url:URL
     var track:Int?
     var album:String?
     
     var description:String {
         get {
-            return "\(path.lastPathComponent) / \(track) / \(album)"
+            return "\(url.lastPathComponent) / \(String(describing: track)) / \(String(describing: album))"
         }
     }
-    
+
     var hashValue: Int {
         get {
-            return path.hashValue
+            return pPath.hashValue
         }
     }
 
-    init(path:String) {
-        self.path = path
+    init(url: URL) {
+        self.url = url
         
-        var fileID:AudioFileID = nil
-        let url = NSURL(fileURLWithPath: path)! as CFURL
-        AudioFileOpenURL(url, Int8(kAudioFileReadPermission), AudioFileTypeID(0), &fileID)
+        var fileID:AudioFileID? = nil
+        //let url = NSURL(fileURLWithPath: path) as CFURL
+        AudioFileOpenURL(url as CFURL, .readPermission, AudioFileTypeID(0), &fileID)
         
         if fileID != nil {
-            var dict:CFDictionary = [:] as CFDictionary 
-            var piDataSize:UInt32 = UInt32(sizeof(CFDictionaryRef.Type))
+            var dict:CFDictionary = [:] as CFDictionary
+            var piDataSize:UInt32 = UInt32(MemoryLayout<CFDictionary.Type>.size)
             
             //  Populates a CFDictionary with the ID3 tag properties
-            let err = AudioFileGetProperty(fileID, AudioFilePropertyID(kAudioFilePropertyInfoDictionary), &piDataSize, &dict)
+            _ = AudioFileGetProperty(fileID!, AudioFilePropertyID(kAudioFilePropertyInfoDictionary), &piDataSize, &dict)
             
-            let info = dict as Dictionary
+            let info = dict as! Dictionary<String, String>
 
-            if let trackFuckery = info[kAFInfoDictionary_TrackNumber] as? String {
-                let trackInfo = trackFuckery.componentsSeparatedByString("/")
-                track = trackInfo[0].toInt()
+            if let trackFuckery = info[kAFInfoDictionary_TrackNumber] {
+                let trackInfo = trackFuckery.components(separatedBy: "/")
+                track = Int(trackInfo[0])
             }
             
-            album = info[kAFInfoDictionary_Album] as? String
+            album = info[kAFInfoDictionary_Album]
         }
     }
 }
 
 func ==(lhs:SongData, rhs:SongData) -> Bool {
-    return lhs.path == rhs.path &&
+    return lhs.url == rhs.url &&
         lhs.track == rhs.track &&
         lhs.album == lhs.album
 }
@@ -73,7 +73,7 @@ func <(lhs:SongData, rhs:SongData) -> Bool {
                     }
                 }
             }
-            else if let tRight = rhs.track {
+            else if rhs.track != nil {
                 return false
             }
             else {
@@ -81,14 +81,18 @@ func <(lhs:SongData, rhs:SongData) -> Bool {
             }
         }
     }
-    else if let aRight = rhs.album {
+    else if rhs.album != nil {
         return false
     }
         
-    return lhs.path < rhs.path
+    return lhs.url.absoluteString < rhs.url.absoluteString
 }
 
+// MARK: -
+// MARK: - View Controller
+
 class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSource, NSTableViewDelegate, AVAudioPlayerDelegate {
+    
 
     @IBOutlet var tableView:NSTableView!
     @IBOutlet var playPause:NSButton!
@@ -106,14 +110,14 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     private var player:AVAudioPlayer? { 
         didSet {
             if let player = player {
-                totalTime.stringValue = timeFormatter.stringFromTimeInterval(player.duration)!
-                currentTime.stringValue = timeFormatter.stringFromTimeInterval(player.currentTime)!
-                progressBar.enabled = true
+                totalTime.stringValue = timeFormatter.string(from: player.duration)!
+                currentTime.stringValue = timeFormatter.string(from: player.currentTime)!
+                progressBar.isEnabled = true
                 progressBar.maxValue = player.duration
                 progressBar.doubleValue = 0
                 
                 if nil == updatePoller {
-                    updatePoller = NSTimer.scheduledTimerWithTimeInterval(1.0 / 20.0, target: self, selector: "updateDisplay", userInfo: nil, repeats: true)
+                    updatePoller = Timer.scheduledTimer(timeInterval: 1.0 / 20.0, target: self, selector: #selector(JacksonViewController.updateDisplay), userInfo: nil, repeats: true)
                 }
             }
         }
@@ -121,20 +125,20 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     
     private var nextPlayer:AVAudioPlayer?
     private var songs:[SongData] = []
-    private var updatePoller:NSTimer?
+    private var updatePoller:Timer?
     private var playing = false
     
-    private lazy var timeFormatter:NSDateComponentsFormatter = {
-        var formatter = NSDateComponentsFormatter()
-        formatter.unitsStyle = .Positional
-        formatter.zeroFormattingBehavior = .Pad
-        formatter.allowedUnits = .CalendarUnitMinute | .CalendarUnitSecond           
+    private lazy var timeFormatter:DateComponentsFormatter = {
+        var formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .positional
+        formatter.zeroFormattingBehavior = .pad
+        formatter.allowedUnits = [.minute, .second]
         return formatter
     }()
     
     private var songIndex = 0 {
         didSet {
-            tableView.selectRowIndexes(NSIndexSet(index: songIndex), byExtendingSelection: false)
+            tableView.selectRowIndexes(NSIndexSet(index: songIndex) as IndexSet, byExtendingSelection: false)
             tableView.scrollRowToVisible(songIndex)
         }
     }
@@ -142,12 +146,12 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     // MARK: - Overrides
     override var acceptsFirstResponder:Bool { get { return true } }
     
-    override func keyUp(theEvent: NSEvent) {
+    override func keyUp(with theEvent: NSEvent) {
         if theEvent.keyCode == 49 {
             togglePlayPause()
         }
         else {
-            super.keyUp(theEvent)
+            super.keyUp(with: theEvent)
         }
     }
     
@@ -155,25 +159,25 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
         super.viewDidLoad()
         // Do view setup here.
         
-        mainView.registerForDraggedTypes([NSFilenamesPboardType])
+        mainView.registerForDraggedTypes([.fileURL])
         mainView.songDelegate = self
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "tableSelectionChanged:", name: NSTableViewSelectionDidChangeNotification, object: tableView)
+        NotificationCenter.default.addObserver(self, selector: #selector(tableSelectionChanged(note:)), name: NSTableView.selectionDidChangeNotification, object: tableView)
         totalTime.stringValue = ""
         currentTime.stringValue = ""
         progressBar.doubleValue = 0
         progressBar.maxValue = 0
-        progressBar.enabled = false
+        progressBar.isEnabled = false
     }
 
-    override func deleteBackward(sender: AnyObject?) {
+    func deleteBackward(sender: AnyObject?) {
         deleteSelectedSong()
     }
     
     // MARK: - Song Delegate 
     
-    func addSongPaths(paths: [String]) {
-        let data = paths.map { SongData(path: $0) }
+    func add(songURLs: [URL]) {
+        let data = songURLs.map { SongData(url: $0) }
         let songSet = Set(songs)
         songs = Array<SongData>(songSet.union(data))
         sortSongs()
@@ -184,26 +188,28 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     
     // MARK: - TableViewness
     
-    func numberOfRowsInTableView(tableView: NSTableView) -> Int {
+    @objc func numberOfRows(in tableView: NSTableView) -> Int {
         return songs.count
     }
 
-    func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        var field:NSTextField? = tableView.makeViewWithIdentifier("rowView", owner: self) as? NSTextField
+    @objc func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
+
+        var field:NSTextField? = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "rowView"), owner: self) as? NSTextField
         
         if nil == field {
             field = NSTextField(frame: NSZeroRect)
-            field?.bordered = false
-            field?.identifier = "rowView"
-            field?.editable = false
+            field?.isBordered = false
+            field?.identifier = NSUserInterfaceItemIdentifier(rawValue: "rowView")
+            field?.isEditable = false
         }
         
-        field?.stringValue = songs[row].path.lastPathComponent.stringByDeletingPathExtension
+        field?.stringValue = songs[row].url.deletingPathExtension().lastPathComponent
         
         return field
     }
-        
-    func tableView(tableView: NSTableView, shouldSelectRow row: Int) -> Bool {
+    
+    
+    func tableView(_ tableView: NSTableView, shouldSelectRow row: Int) -> Bool {
         return true
     }
     
@@ -211,11 +217,11 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
         
     }
     
-    func tableSelectionChanged(note:NSNotification) {
-        var index = tableView.selectedRow
+    @objc func tableSelectionChanged(note: NSNotification) {
+        let index = tableView.selectedRow
         
         if index != songIndex {
-            nextPlayer = avPlayerForSongIndex(index)
+            nextPlayer = avPlayerForSongIndex(index: index)
             // Bit of a hack, advance updates the index, so we have to pretend we were on the previous one.
             songIndex = index - 1
             
@@ -237,8 +243,8 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
         togglePlayPause()
     }
 
-    @IBAction func sliderClicked(sender:NSSlider) {
-        currentTime.stringValue = timeFormatter.stringFromTimeInterval(sender.doubleValue)!
+    @IBAction func sliderClicked(sender: NSSlider) {
+        currentTime.stringValue = timeFormatter.string(from: sender.doubleValue)!
         player?.currentTime = sender.doubleValue
     }
     
@@ -249,15 +255,15 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
             
             var index = 0
             while player == nil && index < songs.count {
-                player = avPlayerForSongIndex(songIndex)
-                index++
+                player = avPlayerForSongIndex(index: songIndex)
+                index += 1
             }
             
             player?.play()
             updatePlayPause()
 
             if songs.count > index {
-                nextPlayer = avPlayerForSongIndex(index)
+                nextPlayer = avPlayerForSongIndex(index: index)
             }
             
             songIndex = 0
@@ -266,18 +272,19 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     
     func avPlayerForSongIndex(index: Int) -> AVAudioPlayer? {
         var result:AVAudioPlayer?
-        if let url = NSURL(fileURLWithPath: songs[index].path) {
-            var error:NSError?
-            result = AVAudioPlayer(contentsOfURL: url, error: &error)
-            
-            result?.delegate = self
-            result?.prepareToPlay()
+        do {
+            result = try AVAudioPlayer(contentsOf: songs[index].url)
+        } catch {
+            result = nil
         }
+        
+        result?.delegate = self
+        result?.prepareToPlay()
         
         return result
     }
     
-    func audioPlayerDidFinishPlaying(player: AVAudioPlayer!, successfully flag: Bool) {
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         advanceToNextSong()
     }
     
@@ -290,7 +297,7 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     }
     
     private func advanceToNextSong() {
-        songIndex++
+        songIndex += 1
 
         player = nextPlayer
         
@@ -308,7 +315,7 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
         }
         
         if songs.count > 0 {
-            nextPlayer = avPlayerForSongIndex(nextIndex)
+            nextPlayer = avPlayerForSongIndex(index: nextIndex)
         }
         else {
             nextPlayer = nil
@@ -319,20 +326,20 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     private func updatePlayPause() {
         if let player = player {
             var title = NSLocalizedString("Play", comment: "play button title")
-            if player.playing {
+            if player.isPlaying {
                 title = NSLocalizedString("Pause", comment: "pause button title")
             }
             
             playPause.title = title
             playMenuItem.title = title
-            playing = player.playing
+            playing = player.isPlaying
         }
     }
     
     private func deleteSelectedSong() {
         if tableView.selectedRow != -1 {
-            songs.removeAtIndex(tableView.selectedRow)
-            songIndex--
+            songs.remove(at: tableView.selectedRow)
+            songIndex -= 1
             tableView.reloadData()
             advanceToNextSong()
         }
@@ -340,21 +347,21 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     
     @objc private func updateDisplay() {
         if let player = player {
-            currentTime.stringValue = timeFormatter.stringFromTimeInterval(player.currentTime)!
+            currentTime.stringValue = timeFormatter.string(from: player.currentTime)!
             progressBar.doubleValue = player.currentTime
         }
     }
     
     private func togglePlayPause() {
         if let player = player {
-            if player.playing {
+            if player.isPlaying {
                 player.pause()
             }
             else {
                 player.play()
             }
             
-            playing = player.playing
+            playing = player.isPlaying
         }
         updatePlayPause()        
     }
@@ -363,6 +370,6 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
         if songs.count < 1 { return }
         
         let item = songs[songIndex]
-        NSWorkspace.sharedWorkspace().selectFile(item.path, inFileViewerRootedAtPath: "")
+        NSWorkspace.shared.selectFile(item.url.absoluteString, inFileViewerRootedAtPath: "")
     }
 }

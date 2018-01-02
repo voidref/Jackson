@@ -9,53 +9,85 @@
 import Cocoa
 
 protocol SongDelegate {
-    func addSongPaths(paths:[String])
+    func add(songURLs :[URL])
 }
 
 class JacksonMainView: NSView {
 
     var songDelegate:SongDelegate?
 
-    override func draggingEntered(sender: NSDraggingInfo) -> NSDragOperation {
+    override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
         let pboard = sender.draggingPasteboard()
         
-        for path in pboard.propertyListForType(NSFilenamesPboardType) as! NSArray {
-            let pathStr = path as! String
-            
-            var isDir:ObjCBool = false
-            if NSFileManager.defaultManager().fileExistsAtPath(pathStr, isDirectory: &isDir) {
-                if isDir.boolValue == true {
-                    return NSDragOperation.Copy
+        // What a shit-show of an API
+        
+        // Do you have an url? thanks I'll convert the string you return for it, as I have to as it's a reference string to a file resource URI
+        if let item = pboard.propertyList(forType: .fileURL) as? String,
+            let url = URL(string: item) {
+            do {
+                // Sure, throw an undocumented exception
+                if try url.checkResourceIsReachable() {
+                    
+                    // give us all your values that really is a single value type, and throw another undocumented exception while you are at it
+                    let values = try url.resourceValues(forKeys: [.isDirectoryKey])
+                    
+                    // Sure, it's an optional bool.
+                    if let isDirectory = values.isDirectory,
+                        isDirectory {
+                        return .copy
+                    }
                 }
+            } catch {
+                // nothing
             }
         }
         
-        return NSDragOperation.None
+        return []
     }
     
-    override func performDragOperation(sender: NSDraggingInfo) -> Bool {
+    override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
         
         let pboard = sender.draggingPasteboard()
         
-        var songPaths:[String] = []
-        for path in pboard.propertyListForType(NSFilenamesPboardType) as! NSArray {
-            let pathStr = path as! String
-            
-            if let paths = NSFileManager.defaultManager().subpathsOfDirectoryAtPath(pathStr, error: nil) as? [String] {
-                for path in paths {
-                    let ext = path.pathExtension.lowercaseString
+        guard let items = pboard.pasteboardItems else { return false }
+        var songURLs:[URL] = []
+
+        for item in items {
+            if let element = item.string(forType: .fileURL),
+                let dirURL = URL(string: element),
+                let urls = FileManager.default.suburls(at: dirURL) {
+                for url in urls {
+                    let ext = url.pathExtension.lowercased()
+                    print(ext)
                     if ext == "m4a" || ext == "mp3" || ext == "aac" {
-                        songPaths.append(pathStr.stringByAppendingPathComponent(path))
+                        songURLs.append(url)
                     }
                 }
             }
         }
         
-        songDelegate?.addSongPaths(songPaths)
+        songDelegate?.add(songURLs: songURLs)
         return true
     }
     
-    override func prepareForDragOperation(sender: NSDraggingInfo) -> Bool {
+    override func prepareForDragOperation(_ sender: NSDraggingInfo) -> Bool {
         return true
+    }
+}
+
+
+extension FileManager {
+    
+    func suburls(at url: URL) -> [URL]? {
+        
+        let urls =
+        enumerator(atPath: url.path)?.flatMap { e -> URL? in
+            
+            guard let s = e as? String else { return nil }
+            let relativeURL = URL(fileURLWithPath: s, relativeTo: url)
+            return relativeURL.absoluteURL
+        }
+        
+        return urls
     }
 }
