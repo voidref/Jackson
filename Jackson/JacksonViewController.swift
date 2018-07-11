@@ -368,8 +368,19 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     
     private func showCurrentSongInFinder() {
         if songs.count < 1 { return }
-        
+
         let item = songs[songIndex]
-        NSWorkspace.shared.selectFile(item.url.absoluteString, inFileViewerRootedAtPath: "")
+        guard let path = item.url.absoluteString.removingPercentEncoding,
+            let lastSlashIndex = path.lastIndex(of: "/")else {
+            print("bad path")
+            return
+        }
+        
+        let root = String(path.prefix(through: lastSlashIndex))
+        
+        NSWorkspace.shared.openFile(root)
+        if false == NSWorkspace.shared.selectFile(path, inFileViewerRootedAtPath: root) {
+            print("unable to select \(path), for some unknown reason, thanks Apple")
+        }
     }
 }
