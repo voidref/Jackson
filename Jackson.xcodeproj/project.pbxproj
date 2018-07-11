@@ -163,11 +163,13 @@
 				TargetAttributes = {
 					E7197D911B43BFBA0020F569 = {
 						CreatedOnToolsVersion = 6.4;
-						DevelopmentTeam = SR7K2S8GE4;
+						DevelopmentTeam = 9CJ32HDKJ4;
+						LastSwiftMigration = 1000;
 						ProvisioningStyle = Automatic;
 					};
 					E7197DA11B43BFBA0020F569 = {
 						CreatedOnToolsVersion = 6.4;
+						LastSwiftMigration = 1000;
 						TestTargetID = E7197D911B43BFBA0020F569;
 					};
 				};
@@ -360,13 +362,13 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = SR7K2S8GE4;
+				DEVELOPMENT_TEAM = 9CJ32HDKJ4;
 				INFOPLIST_FILE = Jackson/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.rockwood.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				VALID_ARCHS = x86_64;
 			};
 			name = Debug;
@@ -378,13 +380,13 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = SR7K2S8GE4;
+				DEVELOPMENT_TEAM = 9CJ32HDKJ4;
 				INFOPLIST_FILE = Jackson/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.rockwood.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				VALID_ARCHS = x86_64;
 			};
 			name = Release;
@@ -406,6 +408,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.rockwood.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Jackson.app/Contents/MacOS/Jackson";
 			};
 			name = Debug;
@@ -423,6 +426,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.rockwood.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Jackson.app/Contents/MacOS/Jackson";
 			};
 			name = Release;

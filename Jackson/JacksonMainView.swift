@@ -17,7 +17,7 @@ class JacksonMainView: NSView {
     var songDelegate:SongDelegate?
 
     override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
-        let pboard = sender.draggingPasteboard()
+        let pboard = sender.draggingPasteboard
         
         // What a shit-show of an API
         
@@ -47,7 +47,7 @@ class JacksonMainView: NSView {
     
     override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
         
-        let pboard = sender.draggingPasteboard()
+        let pboard = sender.draggingPasteboard
         
         guard let items = pboard.pasteboardItems else { return false }
         var songURLs:[URL] = []
@@ -57,9 +57,12 @@ class JacksonMainView: NSView {
                 let dirURL = URL(string: element),
                 let urls = FileManager.default.suburls(at: dirURL) {
                 for url in urls {
-                    let ext = url.pathExtension.lowercased()
-                    if ext == "m4a" || ext == "mp3" || ext == "aac" {
+                    switch url.pathExtension.lowercased() {
+                    case "m4a", "mp3", "aac", "flac":
                         songURLs.append(url)
+
+                    default:
+                        break
                     }
                 }
             }
@@ -80,7 +83,7 @@ extension FileManager {
     func suburls(at url: URL) -> [URL]? {
         
         let urls =
-        enumerator(atPath: url.path)?.flatMap { e -> URL? in
+        enumerator(atPath: url.path)?.compactMap { e -> URL? in
             
             guard let s = e as? String else { return nil }
             let relativeURL = URL(fileURLWithPath: s, relativeTo: url)
