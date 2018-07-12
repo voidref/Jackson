@@ -14,7 +14,17 @@ protocol SongDelegate {
 
 class JacksonMainView: NSView {
 
-    var songDelegate:SongDelegate?
+    struct Keys {
+        static let lastLoaded = "lastFolder"
+    }
+    
+    var songDelegate: SongDelegate? {
+        didSet {
+            if let lastLoaded = UserDefaults.standard.url(forKey: Keys.lastLoaded) {
+                loadSongsInFolder(with: lastLoaded)
+            }
+        }
+    }
 
     override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
         let pboard = sender.draggingPasteboard
@@ -50,31 +60,33 @@ class JacksonMainView: NSView {
         let pboard = sender.draggingPasteboard
         
         guard let items = pboard.pasteboardItems else { return false }
-        var songURLs:[URL] = []
 
         for item in items {
             if let element = item.string(forType: .fileURL),
-                let dirURL = URL(string: element),
-                let urls = FileManager.default.suburls(at: dirURL) {
-                for url in urls {
-                    switch url.pathExtension.lowercased() {
-                    case "m4a", "mp3", "aac", "flac":
-                        songURLs.append(url)
-
-                    default:
-                        break
-                    }
-                }
+                let dirURL = URL(string: element) {
+                loadSongsInFolder(with: dirURL);
             }
         }
         
-        songDelegate?.add(songURLs: songURLs)
         return true
     }
     
     override func prepareForDragOperation(_ sender: NSDraggingInfo) -> Bool {
         return true
     }
+    
+    private func loadSongsInFolder(with url: URL) {
+        guard let urls = FileManager.default.suburls(at: url) else { return }
+
+        UserDefaults.standard.set(url, forKey: Keys.lastLoaded)
+        let supported = ["m4a", "mp3", "aac", "flac"]
+        let songURLs = urls.compactMap { url -> URL? in
+            return supported.contains(url.pathExtension.lowercased()) ? url : nil
+        }
+        
+        songDelegate?.add(songURLs: songURLs)
+    }
+
 }
 
 

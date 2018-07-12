@@ -163,7 +163,7 @@
 				TargetAttributes = {
 					E7197D911B43BFBA0020F569 = {
 						CreatedOnToolsVersion = 6.4;
-						DevelopmentTeam = 9CJ32HDKJ4;
+						DevelopmentTeam = SR7K2S8GE4;
 						LastSwiftMigration = 1000;
 						ProvisioningStyle = Automatic;
 					};
@@ -366,7 +366,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 9CJ32HDKJ4;
+				DEVELOPMENT_TEAM = SR7K2S8GE4;
 				INFOPLIST_FILE = Jackson/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.rockwood.$(PRODUCT_NAME:rfc1034identifier)";
@@ -384,7 +384,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 9CJ32HDKJ4;
+				DEVELOPMENT_TEAM = SR7K2S8GE4;
 				INFOPLIST_FILE = Jackson/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.rockwood.$(PRODUCT_NAME:rfc1034identifier)";

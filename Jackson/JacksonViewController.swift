@@ -101,7 +101,7 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     @IBOutlet var currentTime:NSTextField!
     @IBOutlet var playMenuItem:NSMenuItem!
     
-    var mainView:JacksonMainView {
+    var mainView: JacksonMainView {
         get {
             return view as! JacksonMainView
         }
@@ -157,7 +157,6 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do view setup here.
         
         mainView.registerForDraggedTypes([.fileURL])
         mainView.songDelegate = self
