@@ -9,22 +9,13 @@
 import Cocoa
 
 protocol SongDelegate {
-    func add(songURLs :[URL])
+    func add(urls :[URL])
+    func addFrom(folder url: URL)
 }
 
 class JacksonMainView: NSView {
-
-    struct Keys {
-        static let lastLoaded = "lastFolder"
-    }
     
-    var songDelegate: SongDelegate? {
-        didSet {
-            if let lastLoaded = UserDefaults.standard.url(forKey: Keys.lastLoaded) {
-                loadSongsInFolder(with: lastLoaded)
-            }
-        }
-    }
+    var songDelegate: SongDelegate?
 
     override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
         let pboard = sender.draggingPasteboard
@@ -64,7 +55,7 @@ class JacksonMainView: NSView {
         for item in items {
             if let element = item.string(forType: .fileURL),
                 let dirURL = URL(string: element) {
-                loadSongsInFolder(with: dirURL);
+                songDelegate?.addFrom(folder: dirURL)
             }
         }
         
@@ -74,34 +65,5 @@ class JacksonMainView: NSView {
     override func prepareForDragOperation(_ sender: NSDraggingInfo) -> Bool {
         return true
     }
-    
-    private func loadSongsInFolder(with url: URL) {
-        guard let urls = FileManager.default.suburls(at: url) else { return }
-
-        UserDefaults.standard.set(url, forKey: Keys.lastLoaded)
-        let supported = ["m4a", "mp3", "aac", "flac"]
-        let songURLs = urls.compactMap { url -> URL? in
-            return supported.contains(url.pathExtension.lowercased()) ? url : nil
-        }
-        
-        songDelegate?.add(songURLs: songURLs)
-    }
-
 }
 
-
-extension FileManager {
-    
-    func suburls(at url: URL) -> [URL]? {
-        
-        let urls =
-        enumerator(atPath: url.path)?.compactMap { e -> URL? in
-            
-            guard let s = e as? String else { return nil }
-            let relativeURL = URL(fileURLWithPath: s, relativeTo: url)
-            return relativeURL.absoluteURL
-        }
-        
-        return urls
-    }
-}

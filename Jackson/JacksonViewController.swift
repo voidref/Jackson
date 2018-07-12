@@ -104,8 +104,14 @@ func <(lhs:SongData, rhs:SongData) -> Bool {
 // MARK: -
 // MARK: - View Controller
 
-class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSource, NSTableViewDelegate, AVAudioPlayerDelegate {
+class JacksonViewController: NSViewController, SongDelegate,
+    NSTableViewDataSource, NSTableViewDelegate, AVAudioPlayerDelegate {
     
+    
+    struct Keys {
+        static let lastLoaded = "lastFolder"
+    }
+
     static let hasTagOrganization = false
     
     @IBOutlet var tableView:NSTableView!
@@ -181,6 +187,9 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
         progressBar.doubleValue = 0
         progressBar.maxValue = 0
         progressBar.isEnabled = false
+        
+        refreshSongList()
+        tableView.becomeFirstResponder()
     }
 
     func deleteBackward(sender: AnyObject?) {
@@ -189,14 +198,18 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     
     // MARK: - Song Delegate 
     
-    func add(songURLs: [URL]) {
-        let data = songURLs.map { SongData(url: $0) }
+    func add(urls: [URL]) {
+        let data = urls.map { SongData(url: $0) }
         let songSet = Set(songs)
         songs = Array<SongData>(songSet.union(data))
         sortSongs()
         
         tableView.reloadData()
         startPlayer()
+    }
+    
+    func addFrom(folder url: URL) {
+        loadSongsIn(folder: url)
     }
     
     // MARK: - TableViewness
@@ -261,6 +274,10 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
         player?.currentTime = sender.doubleValue
     }
     
+    @IBAction func refreshMenuInvoked(sender: NSMenuItem) {
+        refreshSongList()
+    }
+    
     // MARK: - AVAudioPlayer
     
     private func startPlayer() {
@@ -302,6 +319,24 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
     }
     
     // MARK: - Private
+    
+    private func loadSongsIn(folder url: URL) {
+        guard let urls = FileManager.default.suburls(at: url) else { return }
+        
+        UserDefaults.standard.set(url, forKey: Keys.lastLoaded)
+        let supported = ["m4a", "mp3", "aac", "flac"]
+        let songURLs = urls.compactMap { url -> URL? in
+            return supported.contains(url.pathExtension.lowercased()) ? url : nil
+        }
+        
+        add(urls: songURLs)
+    }
+
+    private func refreshSongList() {
+        if let lastLoaded = UserDefaults.standard.url(forKey: Keys.lastLoaded) {
+            loadSongsIn(folder: lastLoaded)
+        }
+    }
     
     private func sortSongs() {
         songs.sort { (lhs, rhs) -> Bool in
@@ -395,5 +430,21 @@ class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSour
         if false == NSWorkspace.shared.selectFile(path, inFileViewerRootedAtPath: root) {
             print("unable to select \(path), for some unknown reason, thanks Apple")
         }
+    }
+}
+
+extension FileManager {
+    
+    func suburls(at url: URL) -> [URL]? {
+        
+        let urls =
+            enumerator(atPath: url.path)?.compactMap { e -> URL? in
+                
+                guard let s = e as? String else { return nil }
+                let relativeURL = URL(fileURLWithPath: s, relativeTo: url)
+                return relativeURL.absoluteURL
+        }
+        
+        return urls
     }
 }

@@ -87,6 +87,12 @@
                                     </items>
                                 </menu>
                             </menuItem>
+                            <menuItem isSeparatorItem="YES" id="Adg-6N-nhu"/>
+                            <menuItem title="Refresh" keyEquivalent="r" id="ZTj-Um-K14">
+                                <connections>
+                                    <action selector="refreshMenuInvokedWithSender:" target="uyG-Sh-hDj" id="viG-5a-4K9"/>
+                                </connections>
+                            </menuItem>
                         </items>
                     </menu>
                 </menuItem>
@@ -97,7 +103,7 @@
                             <menuItem title="Play" keyEquivalent=" " id="Zie-1r-Y16">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="playMenuInvoked:" target="-1" id="vQ0-tS-su6"/>
+                                    <action selector="playMenuInvokedWithSender:" target="uyG-Sh-hDj" id="yeQ-em-vNW"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="sa0-ov-to4"/>
@@ -258,7 +264,7 @@ DQ
                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="76" id="Bc2-jH-cuh"/>
                             <constraint firstAttribute="height" constant="22" id="dP0-u7-Mu2"/>
                         </constraints>
-                        <buttonCell key="cell" type="bevel" title="Play" bezelStyle="regularSquare" alignment="center" imageScaling="proportionallyDown" inset="2" id="EYV-el-4EV">
+                        <buttonCell key="cell" type="bevel" title="Play" bezelStyle="regularSquare" alignment="center" refusesFirstResponder="YES" imageScaling="proportionallyDown" inset="2" id="EYV-el-4EV">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -316,5 +322,15 @@ DQ
             </view>
             <point key="canvasLocation" x="6" y="-197.5"/>
         </window>
+        <menuItem title="Open…" keyEquivalent="o" id="4I3-mK-lRz">
+            <connections>
+                <action selector="openDocument:" target="-1" id="bHd-Cx-6YA"/>
+            </connections>
+        </menuItem>
+        <menuItem title="Open…" keyEquivalent="o" id="f50-zQ-5KI">
+            <connections>
+                <action selector="openDocument:" target="-1" id="ZYR-Ad-boE"/>
+            </connections>
+        </menuItem>
     </objects>
 </document>
