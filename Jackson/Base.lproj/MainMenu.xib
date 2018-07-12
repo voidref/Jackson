@@ -181,20 +181,20 @@ DQ
                 <rect key="frame" x="0.0" y="0.0" width="520" height="363"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <scrollView autohidesScrollers="YES" horizontalLineScroll="26" horizontalPageScroll="10" verticalLineScroll="26" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dzR-hu-UQp">
-                        <rect key="frame" x="20" y="20" width="485" height="280"/>
+                    <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="26" horizontalPageScroll="10" verticalLineScroll="26" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dzR-hu-UQp">
+                        <rect key="frame" x="0.0" y="0.0" width="525" height="300"/>
                         <clipView key="contentView" id="1nM-us-bd5">
-                            <rect key="frame" x="1" y="1" width="483" height="278"/>
+                            <rect key="frame" x="0.0" y="0.0" width="525" height="300"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnSelection="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="23" rowSizeStyle="automatic" viewBased="YES" id="0sL-EM-kys">
-                                    <rect key="frame" x="0.0" y="0.0" width="483" height="278"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="525" height="300"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="3"/>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                     <tableColumns>
-                                        <tableColumn width="480" minWidth="40" maxWidth="1000" id="Mqn-9F-Mhq">
+                                        <tableColumn width="522" minWidth="40" maxWidth="1000" id="Mqn-9F-Mhq">
                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                                 <font key="font" metaFont="smallSystem"/>
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -208,15 +208,15 @@ DQ
                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                             <prototypeCellViews>
                                                 <tableCellView id="gfO-bj-dxD">
-                                                    <rect key="frame" x="1" y="1" width="480" height="23"/>
+                                                    <rect key="frame" x="1" y="1" width="522" height="23"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="aCz-ka-cC1">
-                                                            <rect key="frame" x="-2" y="-8" width="477" height="26"/>
+                                                            <rect key="frame" x="8" y="-8" width="509" height="26"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="26" id="Kkk-MN-6aY"/>
                                                             </constraints>
-                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="Table View Cell" id="Y9y-Q8-V1b">
+                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="Table View Cell" placeholderString="a song" id="Y9y-Q8-V1b">
                                                                 <font key="font" metaFont="system"/>
                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -225,7 +225,7 @@ DQ
                                                     </subviews>
                                                     <constraints>
                                                         <constraint firstItem="aCz-ka-cC1" firstAttribute="top" secondItem="gfO-bj-dxD" secondAttribute="top" constant="5" id="dAA-dH-IrS"/>
-                                                        <constraint firstItem="aCz-ka-cC1" firstAttribute="leading" secondItem="gfO-bj-dxD" secondAttribute="leading" id="n9l-si-8m9"/>
+                                                        <constraint firstItem="aCz-ka-cC1" firstAttribute="leading" secondItem="gfO-bj-dxD" secondAttribute="leading" constant="10" id="n9l-si-8m9"/>
                                                         <constraint firstAttribute="trailing" secondItem="aCz-ka-cC1" secondAttribute="trailing" constant="7" id="vdS-uq-9pj"/>
                                                     </constraints>
                                                     <connections>
@@ -242,6 +242,7 @@ DQ
                                 </tableView>
                             </subviews>
                         </clipView>
+                        <edgeInsets key="scrollerInsets" left="8" right="8" top="0.0" bottom="0.0"/>
                         <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="Vw7-I9-2Ci">
                             <rect key="frame" x="1" y="119" width="223" height="15"/>
                             <autoresizingMask key="autoresizingMask"/>
@@ -296,7 +297,7 @@ DQ
                     </textField>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="dzR-hu-UQp" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" symbolic="YES" id="76w-uu-2HT"/>
+                    <constraint firstItem="dzR-hu-UQp" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" id="76w-uu-2HT"/>
                     <constraint firstItem="tBc-iZ-fFx" firstAttribute="leading" secondItem="gqI-ul-EIh" secondAttribute="leading" id="7Sg-23-ylQ"/>
                     <constraint firstItem="bQE-YX-rET" firstAttribute="trailing" secondItem="gqI-ul-EIh" secondAttribute="trailing" id="7eK-vf-Lie"/>
                     <constraint firstItem="bQE-YX-rET" firstAttribute="baseline" secondItem="tBc-iZ-fFx" secondAttribute="baseline" id="8JK-lE-db3"/>
@@ -304,13 +305,13 @@ DQ
                     <constraint firstItem="dzR-hu-UQp" firstAttribute="top" secondItem="gqI-ul-EIh" secondAttribute="bottom" constant="24" id="B0p-4g-nPK"/>
                     <constraint firstItem="dzR-hu-UQp" firstAttribute="top" secondItem="bQE-YX-rET" secondAttribute="bottom" constant="8" symbolic="YES" id="BPY-fB-OFc"/>
                     <constraint firstItem="gqI-ul-EIh" firstAttribute="centerY" secondItem="gdc-Y6-6SM" secondAttribute="centerY" id="Bn7-HU-YQL"/>
-                    <constraint firstItem="gdc-Y6-6SM" firstAttribute="leading" secondItem="dzR-hu-UQp" secondAttribute="leading" id="Cin-Kr-GBT"/>
+                    <constraint firstItem="gdc-Y6-6SM" firstAttribute="leading" secondItem="dzR-hu-UQp" secondAttribute="leading" constant="20" id="Cin-Kr-GBT"/>
                     <constraint firstItem="gqI-ul-EIh" firstAttribute="leading" secondItem="gdc-Y6-6SM" secondAttribute="trailing" constant="8" symbolic="YES" id="PVe-oY-bkv"/>
                     <constraint firstAttribute="trailing" secondItem="gqI-ul-EIh" secondAttribute="trailing" constant="20" symbolic="YES" id="UtO-WF-Qhz"/>
-                    <constraint firstAttribute="bottom" secondItem="dzR-hu-UQp" secondAttribute="bottom" constant="20" symbolic="YES" id="bre-r6-VZ5"/>
+                    <constraint firstAttribute="bottom" secondItem="dzR-hu-UQp" secondAttribute="bottom" id="bre-r6-VZ5"/>
                     <constraint firstItem="dzR-hu-UQp" firstAttribute="top" secondItem="gdc-Y6-6SM" secondAttribute="bottom" constant="21" id="iMH-1r-xrQ"/>
                     <constraint firstItem="bQE-YX-rET" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="tBc-iZ-fFx" secondAttribute="trailing" constant="8" symbolic="YES" id="ql0-Bv-VMI"/>
-                    <constraint firstAttribute="trailing" secondItem="dzR-hu-UQp" secondAttribute="trailing" constant="15" id="zue-I0-BLa"/>
+                    <constraint firstAttribute="trailing" secondItem="dzR-hu-UQp" secondAttribute="trailing" constant="-5" id="zue-I0-BLa"/>
                 </constraints>
             </view>
             <point key="canvasLocation" x="6" y="-197.5"/>
