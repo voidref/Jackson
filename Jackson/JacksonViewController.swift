@@ -18,7 +18,10 @@ struct SongData : CustomStringConvertible, Comparable, Hashable {
     
     var description:String {
         get {
-            return "\(url.lastPathComponent) / \(String(describing: track)) / \(String(describing: album))"
+            let trackStr = track == nil ? "no track data"
+                : String(describing: track)
+            
+            return "\(url.lastPathComponent) / \(trackStr) / \(album ?? "no album data")"
         }
     }
 
@@ -60,7 +63,7 @@ func ==(lhs:SongData, rhs:SongData) -> Bool {
         lhs.album == lhs.album
 }
 
-func <(lhs:SongData, rhs:SongData) -> Bool {
+func tagSorting(_ lhs: SongData, _ rhs: SongData) -> Bool? {
     if let aLeft = lhs.album {
         if let aRight = rhs.album {
             if let tLeft = lhs.track {
@@ -84,8 +87,18 @@ func <(lhs:SongData, rhs:SongData) -> Bool {
     else if rhs.album != nil {
         return false
     }
-        
-    return lhs.url.absoluteString < rhs.url.absoluteString
+
+    return nil
+}
+
+func <(lhs:SongData, rhs:SongData) -> Bool {
+    if JacksonViewController.hasTagOrganization {
+        if let sortOrder = tagSorting(lhs, rhs) {
+            return sortOrder
+        }
+    }
+    
+    return lhs.url.lastPathComponent < rhs.url.lastPathComponent
 }
 
 // MARK: -
@@ -93,7 +106,8 @@ func <(lhs:SongData, rhs:SongData) -> Bool {
 
 class JacksonViewController: NSViewController, SongDelegate, NSTableViewDataSource, NSTableViewDelegate, AVAudioPlayerDelegate {
     
-
+    static let hasTagOrganization = false
+    
     @IBOutlet var tableView:NSTableView!
     @IBOutlet var playPause:NSButton!
     @IBOutlet var progressBar:NSSlider!
