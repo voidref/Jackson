@@ -301,15 +301,13 @@ class JacksonViewController: NSViewController, SongDelegate,
     }
     
     func avPlayerForSongIndex(index: Int) -> AVAudioPlayer? {
-        var result:AVAudioPlayer?
-        do {
-            result = try AVAudioPlayer(contentsOf: songs[index].url)
-        } catch {
-            result = nil
+        
+        guard let result = try? AVAudioPlayer(contentsOf: songs[index].url) else {
+            return nil
         }
         
-        result?.delegate = self
-        result?.prepareToPlay()
+        result.delegate = self
+        result.prepareToPlay()
         
         return result
     }
