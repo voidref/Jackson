@@ -245,7 +245,12 @@ class JacksonViewController: NSViewController, SongDelegate,
     
     @objc func tableSelectionChanged(note: NSNotification) {
         let index = tableView.selectedRow
-        
+
+        if index == -1 {
+            // empty space clicked.
+            return
+        }
+
         if index != songIndex {
             nextPlayer = avPlayerForSongIndex(index: index)
             // Bit of a hack, advance updates the index, so we have to pretend we were on the previous one.
