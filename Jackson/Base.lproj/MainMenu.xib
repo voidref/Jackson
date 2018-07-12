@@ -246,7 +246,7 @@ DQ
                     <button translatesAutoresizingMaskIntoConstraints="NO" id="gdc-Y6-6SM">
                         <rect key="frame" x="20" y="321" width="76" height="22"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="76" id="Bc2-jH-cuh"/>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="76" id="Bc2-jH-cuh"/>
                             <constraint firstAttribute="height" constant="22" id="dP0-u7-Mu2"/>
                         </constraints>
                         <buttonCell key="cell" type="bevel" title="Play" bezelStyle="regularSquare" alignment="center" imageScaling="proportionallyDown" inset="2" id="EYV-el-4EV">
