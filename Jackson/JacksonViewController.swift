@@ -192,7 +192,7 @@ class JacksonViewController: NSViewController, SongDelegate,
         tableView.becomeFirstResponder()
     }
 
-    func deleteBackward(sender: AnyObject?) {
+    @IBAction func deleteBackward(sender: AnyObject?) {
         deleteSelectedSong()
     }
     
