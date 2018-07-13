@@ -19,6 +19,18 @@
             </connections>
         </customObject>
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
+        <viewController id="uyG-Sh-hDj" customClass="JacksonViewController" customModule="Jackson" customModuleProvider="target">
+            <connections>
+                <outlet property="currentTime" destination="tBc-iZ-fFx" id="GS1-bA-EVS"/>
+                <outlet property="playMenuItem" destination="Zie-1r-Y16" id="vqq-sj-JbJ"/>
+                <outlet property="playPause" destination="gdc-Y6-6SM" id="j7d-M8-6h6"/>
+                <outlet property="progressBar" destination="gqI-ul-EIh" id="LPH-Dn-zK6"/>
+                <outlet property="tableView" destination="0sL-EM-kys" id="7CF-ep-FnJ"/>
+                <outlet property="totalTime" destination="bQE-YX-rET" id="PCC-lq-2sM"/>
+                <outlet property="view" destination="EiT-Mj-1SZ" id="gJ9-fZ-oQB"/>
+                <outlet property="volumeMenuItem" destination="VP4-y1-wvY" id="Qme-fW-TJe"/>
+            </connections>
+        </viewController>
         <menu title="Main Menu" systemMenu="main" id="AYu-sK-qS6">
             <items>
                 <menuItem title="Jackson" id="1Xt-HY-uBw">
@@ -128,6 +140,29 @@ DQ
                         </items>
                     </menu>
                 </menuItem>
+                <menuItem title="Audio" id="z8V-rl-qHm">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Audio" id="2RI-DN-bSD">
+                        <items>
+                            <menuItem title="Moar Volume" alternate="YES" keyEquivalent="=" id="aiu-mt-3pX">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="volumeUpWithSender:" target="uyG-Sh-hDj" id="jY1-xr-Mc0"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Less Loud" alternate="YES" keyEquivalent="-" id="Yii-Qw-koQ">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="volumeDownWithSender:" target="uyG-Sh-hDj" id="CRF-yd-XOY"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="tkO-WE-AFM"/>
+                            <menuItem title="50%" enabled="NO" id="VP4-y1-wvY">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
                 <menuItem title="Window" id="aUF-d1-5bR">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Window" systemMenu="window" id="Td7-aD-5lo">
@@ -167,17 +202,6 @@ DQ
                 </menuItem>
             </items>
         </menu>
-        <viewController id="uyG-Sh-hDj" customClass="JacksonViewController" customModule="Jackson" customModuleProvider="target">
-            <connections>
-                <outlet property="currentTime" destination="tBc-iZ-fFx" id="GS1-bA-EVS"/>
-                <outlet property="playMenuItem" destination="Zie-1r-Y16" id="vqq-sj-JbJ"/>
-                <outlet property="playPause" destination="gdc-Y6-6SM" id="j7d-M8-6h6"/>
-                <outlet property="progressBar" destination="gqI-ul-EIh" id="LPH-Dn-zK6"/>
-                <outlet property="tableView" destination="0sL-EM-kys" id="7CF-ep-FnJ"/>
-                <outlet property="totalTime" destination="bQE-YX-rET" id="PCC-lq-2sM"/>
-                <outlet property="view" destination="EiT-Mj-1SZ" id="gJ9-fZ-oQB"/>
-            </connections>
-        </viewController>
         <window title="Jackson" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
@@ -331,6 +355,16 @@ DQ
             <connections>
                 <action selector="openDocument:" target="-1" id="ZYR-Ad-boE"/>
             </connections>
+        </menuItem>
+        <menuItem title="Menu" id="X0D-5I-JbR">
+            <modifierMask key="keyEquivalentModifierMask"/>
+            <menu key="submenu" title="Menu" id="UBv-y0-8mh">
+                <items>
+                    <menuItem title="Item" id="wXE-RI-L8B">
+                        <modifierMask key="keyEquivalentModifierMask"/>
+                    </menuItem>
+                </items>
+            </menu>
         </menuItem>
     </objects>
 </document>

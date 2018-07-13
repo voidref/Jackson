@@ -13,6 +13,7 @@
 		E7197DA91B43BFBA0020F569 /* JacksonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7197DA81B43BFBA0020F569 /* JacksonTests.swift */; };
 		E7197DB31B43C1610020F569 /* JacksonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7197DB21B43C1610020F569 /* JacksonViewController.swift */; };
 		E7197DB51B43C44C0020F569 /* JacksonMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7197DB41B43C44C0020F569 /* JacksonMainView.swift */; };
+		E767722720F8547D00E2FCE8 /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = E767722620F8547D00E2FCE8 /* Song.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,7 @@
 		E7197DA81B43BFBA0020F569 /* JacksonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JacksonTests.swift; sourceTree = "<group>"; };
 		E7197DB21B43C1610020F569 /* JacksonViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JacksonViewController.swift; sourceTree = "<group>"; };
 		E7197DB41B43C44C0020F569 /* JacksonMainView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JacksonMainView.swift; sourceTree = "<group>"; };
+		E767722620F8547D00E2FCE8 /* Song.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +79,7 @@
 		E7197D941B43BFBA0020F569 /* Jackson */ = {
 			isa = PBXGroup;
 			children = (
+				E767722620F8547D00E2FCE8 /* Song.swift */,
 				E7197D971B43BFBA0020F569 /* AppDelegate.swift */,
 				E7197DB21B43C1610020F569 /* JacksonViewController.swift */,
 				E7197DB41B43C44C0020F569 /* JacksonMainView.swift */,
@@ -163,7 +166,7 @@
 				TargetAttributes = {
 					E7197D911B43BFBA0020F569 = {
 						CreatedOnToolsVersion = 6.4;
-						DevelopmentTeam = 9CJ32HDKJ4;
+						DevelopmentTeam = SR7K2S8GE4;
 						LastSwiftMigration = 1000;
 						ProvisioningStyle = Automatic;
 					};
@@ -217,6 +220,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E767722720F8547D00E2FCE8 /* Song.swift in Sources */,
 				E7197DB31B43C1610020F569 /* JacksonViewController.swift in Sources */,
 				E7197DB51B43C44C0020F569 /* JacksonMainView.swift in Sources */,
 				E7197D981B43BFBA0020F569 /* AppDelegate.swift in Sources */,
@@ -366,7 +370,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 9CJ32HDKJ4;
+				DEVELOPMENT_TEAM = SR7K2S8GE4;
 				INFOPLIST_FILE = Jackson/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
@@ -385,7 +389,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 9CJ32HDKJ4;
+				DEVELOPMENT_TEAM = SR7K2S8GE4;
 				INFOPLIST_FILE = Jackson/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
