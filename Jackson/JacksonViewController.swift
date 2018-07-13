@@ -126,7 +126,7 @@ class JacksonViewController: NSViewController, SongDelegate,
         let defaults = UserDefaults.standard
         
         volume = defaults.float(forKey: Keys.volume)
-        if volume == 0 { volume = 0.5 }
+        if volume <= 0 { volume = 0.5 }
         
         refreshSongList()
         tableView.becomeFirstResponder()
@@ -396,42 +396,41 @@ class JacksonViewController: NSViewController, SongDelegate,
         
         if volume == 0 { return }
         
+        var value = Int(volume * 100.0)
+        
         // Yes, I am a bit nuts
-        switch volume {
-
-        case 0.9 ... 1.0:
-            volume -= 0.01
-
-        case 0.2 ... 0.8:
-            volume -= 0.1
-
-        case 0 ... 0.1:
-            volume -= 0.01
-            
-        default:
-            break
+        
+        if value > 90 {
+            value -= 1
         }
+        else if value > 11 {
+            value -= 10
+        }
+        else if value > 1 {
+            value -= 1
+        }
+        
+        volume = Float(value) / 100
     }
     
     private func increaseVolume() {
         
         if volume == 1 { return }
         
+        var value = Int(volume * 100.0)
+
         // still crazy
-        switch volume {
-            
-        case 0.9 ... 1.0:
-            volume += 0.01
-            
-        case 0.2 ... 0.8:
-            volume += 0.1
-            
-        case 0 ... 0.1:
-            volume += 0.01
-            
-        default:
-            break
+        if value < 10 {
+            value += 1
         }
+        else if value < 90 {
+            value += 10
+        }
+        else if value < 100 {
+            value += 1
+        }
+        
+        volume = Float(value) / 100
     }
     
 }
