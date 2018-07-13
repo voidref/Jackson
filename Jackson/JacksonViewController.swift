@@ -271,6 +271,7 @@ class JacksonViewController: NSViewController, SongDelegate,
         
         result.delegate = self
         result.prepareToPlay()
+        result.volume = volume
         
         return result
     }
