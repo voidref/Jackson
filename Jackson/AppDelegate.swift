@@ -14,6 +14,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var window: NSWindow!
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
+        // if only ... "launchctl unload -w /System/Library/LaunchAgents/com.apple.rcd.plist"
     }
 
     func applicationWillTerminate(aNotification: NSNotification) {

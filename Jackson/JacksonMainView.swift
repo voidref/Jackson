@@ -8,14 +8,9 @@
 
 import Cocoa
 
-protocol SongDelegate {
-    func add(urls :[URL])
-    func addFrom(folder url: URL)
-}
-
 class JacksonMainView: NSView {
     
-    var songDelegate: SongDelegate?
+    weak var playlist: Playlist?
 
     override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
         let pboard = sender.draggingPasteboard
@@ -55,7 +50,7 @@ class JacksonMainView: NSView {
         for item in items {
             if let element = item.string(forType: .fileURL),
                 let dirURL = URL(string: element) {
-                songDelegate?.addFrom(folder: dirURL)
+                playlist?.addFrom(folder: dirURL)
             }
         }
         

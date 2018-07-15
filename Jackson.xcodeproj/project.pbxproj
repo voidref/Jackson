@@ -13,6 +13,8 @@
 		E7197DA91B43BFBA0020F569 /* JacksonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7197DA81B43BFBA0020F569 /* JacksonTests.swift */; };
 		E7197DB31B43C1610020F569 /* JacksonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7197DB21B43C1610020F569 /* JacksonViewController.swift */; };
 		E7197DB51B43C44C0020F569 /* JacksonMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7197DB41B43C44C0020F569 /* JacksonMainView.swift */; };
+		E721B73A20FB225200EEE83E /* JacksonApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E721B73920FB225200EEE83E /* JacksonApp.swift */; };
+		E74DE06720FBEAA2004021D9 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = E74DE06620FBEAA2004021D9 /* Playlist.swift */; };
 		E767722720F8547D00E2FCE8 /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = E767722620F8547D00E2FCE8 /* Song.swift */; };
 /* End PBXBuildFile section */
 
@@ -37,6 +39,8 @@
 		E7197DA81B43BFBA0020F569 /* JacksonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JacksonTests.swift; sourceTree = "<group>"; };
 		E7197DB21B43C1610020F569 /* JacksonViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JacksonViewController.swift; sourceTree = "<group>"; };
 		E7197DB41B43C44C0020F569 /* JacksonMainView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JacksonMainView.swift; sourceTree = "<group>"; };
+		E721B73920FB225200EEE83E /* JacksonApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JacksonApp.swift; sourceTree = "<group>"; };
+		E74DE06620FBEAA2004021D9 /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
 		E767722620F8547D00E2FCE8 /* Song.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -79,6 +83,8 @@
 		E7197D941B43BFBA0020F569 /* Jackson */ = {
 			isa = PBXGroup;
 			children = (
+				E721B73920FB225200EEE83E /* JacksonApp.swift */,
+				E74DE06620FBEAA2004021D9 /* Playlist.swift */,
 				E767722620F8547D00E2FCE8 /* Song.swift */,
 				E7197D971B43BFBA0020F569 /* AppDelegate.swift */,
 				E7197DB21B43C1610020F569 /* JacksonViewController.swift */,
@@ -220,10 +226,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E721B73A20FB225200EEE83E /* JacksonApp.swift in Sources */,
 				E767722720F8547D00E2FCE8 /* Song.swift in Sources */,
 				E7197DB31B43C1610020F569 /* JacksonViewController.swift in Sources */,
 				E7197DB51B43C44C0020F569 /* JacksonMainView.swift in Sources */,
 				E7197D981B43BFBA0020F569 /* AppDelegate.swift in Sources */,
+				E74DE06720FBEAA2004021D9 /* Playlist.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
