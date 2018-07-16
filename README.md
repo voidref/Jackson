@@ -1,5 +1,5 @@
 # Jackson
-A fairly simple music player for Mac OSX
+A fairly simple music player for macOS
 
 ![Jackson Screenshot](jackson.png)
 
