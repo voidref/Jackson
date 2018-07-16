@@ -10,44 +10,7 @@ import Cocoa
 import AVFoundation
 
 
-// MARK: -
-// MARK: - View Controller
-
 class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlayerDelegate, PlaylistDelegate {
-    func didUpdate(playlist: Playlist, position: Double) {
-        progressBar.doubleValue = position
-        if let stringTime = timeFormatter.string(from: position) {
-            currentTime.stringValue = stringTime
-        }
-    }
-    
-    func didUpdate(playlist: Playlist, index: Int) {
-        
-        guard playlist.songs.count > 0 else {
-            nextPlayer = nil
-            player = nil
-            return
-        }
-        
-        if player == nil {
-            player = avPlayerForSongIndex(index: index)
-        }
-        
-        if playing {
-            player?.play()
-        }
-        
-        nextPlayer = avPlayerForSongIndex(index: playlist.nextIndex)
-
-        tableView.selectRowIndexes(IndexSet(integer: index),
-                                   byExtendingSelection: false)
-        tableView.scrollRowToVisible(index)
-    }
-    
-    func didUpdate(playlist: Playlist) {
-        tableView.reloadData()
-    }
-    
     
     struct Keys {
         static let volume = "Volume"
@@ -109,6 +72,7 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
     }
     
     // MARK: - Overrides
+    
     override var acceptsFirstResponder:Bool { get { return true } }
     
     override func keyUp(with theEvent: NSEvent) {
@@ -167,10 +131,9 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
         case NX_KEYTYPE_PLAY:
             if state {
                 togglePlayPause()  
-                print("play pressed")
             }
             
-        case NX_KEYTYPE_FAST:
+        case NX_KEYTYPE_NEXT:
             if state {} // Next pressed and released
             
         case NX_KEYTYPE_REWIND:
@@ -179,7 +142,6 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
         default:
             break
         }
-
     }
     
     // MARK: - TableViewDelegate
@@ -205,22 +167,41 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
         return true
     }
     
-    func tableView(tableView:NSTableView, rowSelected:Int) {
-        
-    }
-    
-    @objc func tableSelectionChanged(note: NSNotification) {
-        let index = tableView.selectedRow
 
-        if index == -1 {
-            // empty space clicked.
+    // MARK: - PlaylistDelegate
+    
+    func didUpdate(playlist: Playlist, position: Double) {
+        progressBar.doubleValue = position
+        if let stringTime = timeFormatter.string(from: position) {
+            currentTime.stringValue = stringTime
+        }
+    }
+
+    func didUpdate(playlist: Playlist, index: Int) {
+        
+        guard playlist.songs.count > 0 else {
+            nextPlayer = nil
+            player = nil
             return
         }
         
-        if index != playlist.index {
-            player = nil
-            playlist.index = index
+        if player == nil {
+            player = avPlayerForSongIndex(index: index)
         }
+        
+        if playing {
+            player?.play()
+        }
+        
+        nextPlayer = avPlayerForSongIndex(index: playlist.nextIndex)
+        
+        tableView.selectRowIndexes(IndexSet(integer: index),
+                                   byExtendingSelection: false)
+        tableView.scrollRowToVisible(index)
+    }
+    
+    func didUpdate(playlist: Playlist) {
+        tableView.reloadData()
     }
     
     // MARK: - Actions
@@ -256,9 +237,29 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
     @IBAction func volumeUp(sender: AnyObject?) {
         increaseVolume()
     }
-
-    // MARK: - AVAudioPlayer
     
+    // MARK: - AVAudioPlayerDelegate
+    
+    @objc func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        advanceToNextSong()
+    }
+    
+    // MARK: - Private
+    
+    @objc private func tableSelectionChanged(note: NSNotification) {
+        let index = tableView.selectedRow
+        
+        if index == -1 {
+            // empty space clicked.
+            return
+        }
+        
+        if index != playlist.index {
+            player = nil
+            playlist.index = index
+        }
+    }
+
     private func startPlayer() {
         if nil == player && playlist.songs.count > 0 {
             
@@ -280,7 +281,7 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
         }
     }
     
-    func avPlayerForSongIndex(index: Int) -> AVAudioPlayer? {
+    private func avPlayerForSongIndex(index: Int) -> AVAudioPlayer? {
         
         guard let result = try? AVAudioPlayer(contentsOf: playlist.songs[index].url) else {
             return nil
@@ -292,14 +293,7 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
         
         return result
     }
-    
-    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        advanceToNextSong()
-    }
-    
-    // MARK: - Private
-    
-    
+
     private func advanceToNextSong() {
 
         player = nextPlayer
