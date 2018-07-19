@@ -11,7 +11,7 @@ import AudioToolbox
 
 
 // MARK: Model Item
-struct Song : CustomStringConvertible, Comparable, Hashable {
+struct Song : CustomStringConvertible, Comparable, Hashable, Codable {
     var url:URL
     var track:Int?
     var album:String?

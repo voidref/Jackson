@@ -18,6 +18,7 @@ class Playlist: NSObject, NSTableViewDataSource {
     
     struct Keys {
         static let lastLoaded = "LastFolder"
+        static let currentPlaylist = "Current"
         static let lastIndex = "LastIndex"
         static let lastProgress = "LastProgress"
     }
@@ -52,7 +53,7 @@ class Playlist: NSObject, NSTableViewDataSource {
     
     override init() {
         super.init()
-        refreshSongList()
+        loadSongs()
     }
     
     func add(urls: [URL]) {
@@ -61,7 +62,7 @@ class Playlist: NSObject, NSTableViewDataSource {
         songs = Array<Song>(songSet.union(data))
         sortSongs()
         
-        delegate?.didUpdate(playlist: self)
+        songsUpdated()
     }
     
     func addFrom(folder url: URL) {
@@ -70,7 +71,7 @@ class Playlist: NSObject, NSTableViewDataSource {
     
     func delete(at index: Int) {
         songs.remove(at: index)
-        delegate?.didUpdate(playlist: self)
+        songsUpdated()
         
         if songs.count > 0 {
             if index == songs.count {
@@ -82,12 +83,20 @@ class Playlist: NSObject, NSTableViewDataSource {
         }
     }
     
-    func refreshSongList() {
-        if let lastLoaded = UserDefaults.standard.url(forKey: Keys.lastLoaded) {
-            loadSongsIn(folder: lastLoaded)
-        }
+    func loadSongs() {
         
         let defaults = UserDefaults.standard
+
+        // Tech debt, remove this when our userbase has pretty much all
+        // updated to the new version
+        if let lastLoaded = defaults.url(forKey: Keys.lastLoaded) {
+            loadSongsIn(folder: lastLoaded)
+            defaults.removeObject(forKey: Keys.lastLoaded)
+        }
+        else {
+            loadPlaylist()
+        }
+
         index = defaults.integer(forKey: Keys.lastIndex)
         position = defaults.double(forKey: Keys.lastProgress)
     }
@@ -116,10 +125,46 @@ class Playlist: NSObject, NSTableViewDataSource {
         }
     }
     
+    private func songsUpdated() {
+        delegate?.didUpdate(playlist: self)
+        savePlaylist()
+    }
+    
+    private func loadPlaylist() {
+        let decoder = JSONDecoder()
+        let defaults = UserDefaults.standard
+        if let songsData = defaults.object(forKey: Keys.currentPlaylist) as? Data,
+            let songsActual = try? decoder.decode([Song].self, from: songsData) {
+            songs = songsActual
+        }
+    }
+    
+    private func savePlaylist() {
+        let encoder = JSONEncoder()
+        if let coded = try? encoder.encode(songs) {
+            UserDefaults.standard.set(coded, forKey: Keys.currentPlaylist)
+        }
+    }
     // MARK: - TableView Datasource
     
     @objc func numberOfRows(in tableView: NSTableView) -> Int {
         return songs.count
     }
 
+}
+
+extension FileManager {
+    
+    func suburls(at url: URL) -> [URL]? {
+        
+        let urls =
+            enumerator(atPath: url.path)?.compactMap { e -> URL? in
+                
+                guard let s = e as? String else { return nil }
+                let relativeURL = URL(fileURLWithPath: s, relativeTo: url)
+                return relativeURL.absoluteURL
+        }
+        
+        return urls
+    }
 }

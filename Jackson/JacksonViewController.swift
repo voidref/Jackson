@@ -221,11 +221,7 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
     @IBAction func sliderClicked(sender: NSSlider) {
         player?.currentTime = sender.doubleValue
     }
-    
-    @IBAction func refreshMenuInvoked(sender: NSMenuItem) {
-        playlist.refreshSongList()
-    }
-    
+        
     @IBAction func deleteBackward(sender: AnyObject?) {
         deleteSelectedSong()
     }
@@ -350,7 +346,7 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
 
         let item = playlist.songs[playlist.index]
         guard let path = item.url.absoluteString.removingPercentEncoding,
-            let lastSlashIndex = path.lastIndex(of: "/")else {
+            let lastSlashIndex = path.lastIndex(of: "/") else {
             print("bad path")
             return
         }
@@ -406,18 +402,4 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
     
 }
 
-extension FileManager {
-    
-    func suburls(at url: URL) -> [URL]? {
-        
-        let urls =
-            enumerator(atPath: url.path)?.compactMap { e -> URL? in
-                
-                guard let s = e as? String else { return nil }
-                let relativeURL = URL(fileURLWithPath: s, relativeTo: url)
-                return relativeURL.absoluteURL
-        }
-        
-        return urls
-    }
-}
+
