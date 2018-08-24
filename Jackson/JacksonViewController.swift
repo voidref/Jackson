@@ -261,6 +261,11 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
             
             // We ensure that we start with a song we can play.
             var index = playlist.index
+
+            if playlist.songs.count < index {
+                index = 0
+            }
+
             while player == nil && index < playlist.songs.count {
                 player = avPlayerForSongIndex(index: index)
                 index += 1
@@ -278,7 +283,7 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
     }
     
     private func avPlayerForSongIndex(index: Int) -> AVAudioPlayer? {
-        
+
         guard let result = try? AVAudioPlayer(contentsOf: playlist.songs[index].url) else {
             return nil
         }
