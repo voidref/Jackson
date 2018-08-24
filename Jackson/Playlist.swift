@@ -17,7 +17,7 @@ protocol PlaylistDelegate: class {
 class Playlist: NSObject, NSTableViewDataSource {
     
     struct Keys {
-        static let lastLoaded = "LastFolder"
+        static let lastLoaded = "LastFolder" // Remove inna while.
         static let currentPlaylist = "Current"
         static let lastIndex = "LastIndex"
         static let lastProgress = "LastProgress"
@@ -110,7 +110,6 @@ class Playlist: NSObject, NSTableViewDataSource {
     private func loadSongsIn(folder url: URL) {
         guard let urls = FileManager.default.suburls(at: url) else { return }
         
-        UserDefaults.standard.set(url, forKey: Keys.lastLoaded)
         let supported = ["m4a", "mp3", "aac", "flac"]
         let songURLs = urls.compactMap { url -> URL? in
             return supported.contains(url.pathExtension.lowercased()) ? url : nil
@@ -144,7 +143,11 @@ class Playlist: NSObject, NSTableViewDataSource {
         if let coded = try? encoder.encode(songs) {
             UserDefaults.standard.set(coded, forKey: Keys.currentPlaylist)
         }
+
+        // Remove as above when we don't think anyone will have the 'old' version of the app.
+         UserDefaults.standard.removeObject(forKey: Keys.lastLoaded)
     }
+
     // MARK: - TableView Datasource
     
     @objc func numberOfRows(in tableView: NSTableView) -> Int {

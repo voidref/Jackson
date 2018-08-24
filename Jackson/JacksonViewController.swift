@@ -121,7 +121,7 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
     // MARK: - Media key handling
     
     @objc func mediaKeyPressed(note: Notification) {
-        guard let code = note.userInfo?[JacksonApp.CodeKey] as? Int,
+         guard let code = note.userInfo?[JacksonApp.CodeKey] as? Int,
             let state = note.userInfo?[JacksonApp.StateKey] as? Bool else {
             print("code or state missing")
                 return
