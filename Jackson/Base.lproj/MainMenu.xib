@@ -83,7 +83,7 @@
                         <items>
                             <menuItem title="Open…" keyEquivalent="o" id="IAo-SY-fd9">
                                 <connections>
-                                    <action selector="openDocument:" target="-1" id="bVn-NM-KNZ"/>
+                                    <action selector="openFileClicked:" target="uyG-Sh-hDj" id="fPj-Ac-ALn"/>
                                 </connections>
                             </menuItem>
                         </items>
