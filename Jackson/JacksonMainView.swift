@@ -11,50 +11,39 @@ import Cocoa
 class JacksonMainView: NSView {
     
     weak var playlist: Playlist?
-
-    override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
-        let pboard = sender.draggingPasteboard
-        
-        // What a shit-show of an API
-        
-        // Do you have an url? thanks I'll convert the string you return for it, as I have to as it's a reference string to a file resource URI
-        if let item = pboard.propertyList(forType: .fileURL) as? String,
-            let url = URL(string: item) {
-            do {
-                // Sure, throw an undocumented exception
-                if try url.checkResourceIsReachable() {
-                    
-                    // give us all your values that really is a single value type, and throw another undocumented exception while you are at it
-                    let values = try url.resourceValues(forKeys: [.isDirectoryKey])
-                    
-                    // Sure, it's an optional bool.
-                    if let isDirectory = values.isDirectory,
-                        isDirectory {
-                        return .copy
-                    }
-                }
-            } catch {
-                // nothing
-            }
+    
+    private let filteringOptions = [NSPasteboard.ReadingOptionKey.urlReadingContentsConformToTypes:
+        [kUTTypeAudio, kUTTypeFolder]
+    ]
+    
+    private func shouldAllowDrag(_ draggingInfo: NSDraggingInfo) -> Bool {
+        var canAccept = false
+        if draggingInfo.draggingPasteboard.canReadObject(forClasses: [NSURL.self], options: filteringOptions) {
+            canAccept = true
         }
-        
-        return []
+        return canAccept
     }
     
-    override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
+    override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
+        let allow = shouldAllowDrag(sender)
+        return allow ? .copy : NSDragOperation()
+    }
+    
+    override func performDragOperation(_ draggingInfo: NSDraggingInfo) -> Bool {
+        let pasteBoard = draggingInfo.draggingPasteboard
         
-        let pboard = sender.draggingPasteboard
-        
-        guard let items = pboard.pasteboardItems else { return false }
-
-        for item in items {
-            if let element = item.string(forType: .fileURL),
-                let dirURL = URL(string: element) {
-                playlist?.addFrom(folder: dirURL)
+        if let urls = pasteBoard.readObjects(forClasses: [NSURL.self], options: filteringOptions) as? [URL], urls.count > 0 {
+            for element in urls {
+                if element.hasDirectoryPath {
+                    playlist?.addFrom(folder: element)
+                }
+                else {
+                    playlist?.add(urls: [element])
+                }
             }
+            return true
         }
-        
-        return true
+        return false
     }
     
     override func prepareForDragOperation(_ sender: NSDraggingInfo) -> Bool {
