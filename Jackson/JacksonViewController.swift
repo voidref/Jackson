@@ -54,6 +54,8 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
     private var updatePoller: Timer?
     private var playing = false
     
+    private let rowViewIdentifier = NSUserInterfaceItemIdentifier(rawValue: "rowView")
+
     private lazy var timeFormatter: DateComponentsFormatter = {
         var formatter = DateComponentsFormatter()
         formatter.unitsStyle = .positional
@@ -143,16 +145,21 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
     
     @objc func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
 
-        var field:NSTextField? = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "rowView"), owner: self) as? NSTextField
+        let field: NSTextField = {
+            if let view = tableView.makeView(withIdentifier: rowViewIdentifier,
+                                             owner: self) as? NSTextField {
+                return view
+            }
+            
+            let view = NSTextField()
+            view.isBordered = false
+            view.identifier = rowViewIdentifier
+            view.isEditable = false
+            
+            return view
+        }()
         
-        if nil == field {
-            field = NSTextField(frame: NSZeroRect)
-            field?.isBordered = false
-            field?.identifier = NSUserInterfaceItemIdentifier(rawValue: "rowView")
-            field?.isEditable = false
-        }
-        
-        field?.stringValue = playlist.songs[row].url.deletingPathExtension().lastPathComponent
+        field.stringValue = playlist.songs[row].url.deletingPathExtension().lastPathComponent
         
         return field
     }
