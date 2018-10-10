@@ -316,24 +316,45 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
     
     func showNotification() -> Void {
         
-        var artist:String = "Unknown Artist"
-        var title:String = "Unknown Title"
+        var artist:String?
+        var title:String?
         
-        let playerItem = AVPlayerItem(url: playlist.songs[playlist.index].url)
-        let metadataList = playerItem.asset.commonMetadata
-        for item in metadataList {
-            if item.commonKey!.rawValue == "title" {
-                title = item.stringValue!
+        let currentSong = playlist.songs[playlist.index]
+        
+        DispatchQueue.global().async {
+            let playerItem = AVPlayerItem(url: currentSong.url)
+            let metadataList = playerItem.asset.commonMetadata
+            for item in metadataList {
+                switch item.commonKey {
+                case .some(.commonKeyTitle):
+                    title = item.stringValue
+                    
+                case .some(.commonKeyArtist):
+                    artist = item.stringValue
+                    
+                default:
+                    break
+                }
             }
-            if item.commonKey!.rawValue == "artist" {
-                artist = item.stringValue!
+            
+            let notification = NSUserNotification()
+            notification.title = "Now playing..."
+            
+            if let artistActual = artist,
+                let titleActual = title {
+                notification.informativeText = "\(artistActual) — \(titleActual)"
+            }
+            else {
+                notification.informativeText = currentSong
+                    .url
+                    .deletingPathExtension()
+                    .lastPathComponent
+            }
+
+            DispatchQueue.main.async {
+                NSUserNotificationCenter.default.deliver(notification)
             }
         }
-        
-        let notification = NSUserNotification()
-        notification.title = "Now playing..."
-        notification.informativeText = "\(artist) — \(title)"
-        NSUserNotificationCenter.default.deliver(notification)
     }
     
     private func updatePlayPause() {
