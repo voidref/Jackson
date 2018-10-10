@@ -98,12 +98,7 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
                                                selector: #selector(mediaKeyPressed(note:)),
                                                name: JacksonApp.MediaKey,
                                                object: nil)
-        
-        totalTime.stringValue = ""
-        currentTime.stringValue = ""
-        progressBar.doubleValue = 0
-        progressBar.maxValue = 0
-        progressBar.isEnabled = false
+        resetSongInfo()
         
         let defaults = UserDefaults.standard
         
@@ -166,7 +161,7 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
     func tableView(_ tableView: NSTableView, shouldSelectRow row: Int) -> Bool {
         return true
     }
-    
+
 
     // MARK: - PlaylistDelegate
     
@@ -205,6 +200,10 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
     }
     
     // MARK: - Actions
+    
+    @IBAction func openFileClicked(_ sender: NSMenuItem) {
+        showFileBrowser()
+    }
     
     @IBAction func showInFinderMenuInvoked(sender: NSMenuItem) {
         showCurrentSongInFinder()
@@ -405,6 +404,30 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
         volume = Float(value) / 100
     }
     
+    private func resetSongInfo() {
+        totalTime.stringValue = ""
+        currentTime.stringValue = ""
+        progressBar.doubleValue = 0
+        progressBar.maxValue = 0
+        progressBar.isEnabled = false
+    }
+    
+    private func showFileBrowser() {
+        let panel = NSOpenPanel()
+        panel.canChooseFiles = false
+        panel.canChooseDirectories = true
+        panel.allowsMultipleSelection = false
+        panel.begin { (result) in
+            if result == NSApplication.ModalResponse.OK {
+                let selectedFolder = panel.urls[0]
+                self.player?.stop()
+                self.player = nil
+                self.resetSongInfo()
+                self.playlist.deleteAll()
+                self.playlist.addFrom(folder: selectedFolder)
+            }
+        }
+    }
 }
 
 

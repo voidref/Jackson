@@ -83,6 +83,12 @@ class Playlist: NSObject, NSTableViewDataSource {
         }
     }
     
+    func deleteAll() {
+        songs.removeAll()
+        songsUpdated()
+        self.index = 0
+    }
+    
     func loadSongs() {
         
         let defaults = UserDefaults.standard
