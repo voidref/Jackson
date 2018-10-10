@@ -8,7 +8,7 @@
 
 import Cocoa
 import AVFoundation
-
+import MediaPlayer
 
 class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlayerDelegate, PlaylistDelegate {
     
@@ -303,6 +303,30 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
         }
         
         playlist.advance()
+        
+        showNotification()
+    }
+    
+    func showNotification() -> Void {
+        
+        var artist:String = "Unknown Artist"
+        var title:String = "Unknown Title"
+        
+        let playerItem = AVPlayerItem(url: playlist.songs[playlist.index].url)
+        let metadataList = playerItem.asset.commonMetadata
+        for item in metadataList {
+            if item.commonKey!.rawValue == "title" {
+                title = item.stringValue!
+            }
+            if item.commonKey!.rawValue == "artist" {
+                artist = item.stringValue!
+            }
+        }
+        
+        let notification = NSUserNotification()
+        notification.title = "Now playing..."
+        notification.informativeText = "\(artist) — \(title)"
+        NSUserNotificationCenter.default.deliver(notification)
     }
     
     private func updatePlayPause() {
