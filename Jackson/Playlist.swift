@@ -116,7 +116,7 @@ class Playlist: NSObject, NSTableViewDataSource {
     private func loadSongsIn(folder url: URL) {
         guard let urls = FileManager.default.suburls(at: url) else { return }
         
-        let supported = ["m4a", "mp3", "aac", "flac"]
+        let supported = ["m4a", "mp3", "aac", "flac", "wav"]
         let songURLs = urls.compactMap { url -> URL? in
             return supported.contains(url.pathExtension.lowercased()) ? url : nil
         }
