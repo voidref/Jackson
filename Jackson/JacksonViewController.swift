@@ -14,6 +14,7 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
     
     struct Keys {
         static let volume = "Volume"
+        static let looping = "Looping"
     }
 
     static let hasTagOrganization = false
@@ -24,6 +25,7 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
     @IBOutlet var totalTime: NSTextField!
     @IBOutlet var currentTime: NSTextField!
     @IBOutlet var playMenuItem: NSMenuItem!
+    @IBOutlet var loopMenuItem: NSMenuItem!
     @IBOutlet var volumeMenuItem: NSMenuItem!
 
     
@@ -53,6 +55,14 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
     private var nextPlayer: AVAudioPlayer?
     private var updatePoller: Timer?
     private var playing = false
+    private var looping = false {
+        didSet {
+            UserDefaults.standard.set(volume, forKey: Keys.looping)
+
+            loopMenuItem?.state = looping ? .on : .off
+            setNextPlayer()
+        }
+    }
     
     private let rowViewIdentifier = NSUserInterfaceItemIdentifier(rawValue: "rowView")
 
@@ -104,6 +114,7 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
         
         let defaults = UserDefaults.standard
         
+        looping = defaults.bool(forKey: Keys.looping)
         volume = defaults.float(forKey: Keys.volume)
         if volume <= 0 { volume = 0.5 }
         
@@ -113,6 +124,7 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
         playlist.delegate = self
 
         startPlayer()
+        updateTableViewSelection()
     }
 
     // MARK: - Media key handling
@@ -195,11 +207,8 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
             player?.play()
         }
         
-        nextPlayer = avPlayerForSongIndex(index: playlist.nextIndex)
-        
-        tableView.selectRowIndexes(IndexSet(integer: index),
-                                   byExtendingSelection: false)
-        tableView.scrollRowToVisible(index)
+        setNextPlayer()
+        updateTableViewSelection()
     }
     
     func didUpdate(playlist: Playlist) {
@@ -218,6 +227,10 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
     
     @IBAction func playMenuInvoked(sender: NSMenuItem) {
         togglePlayPause()
+    }
+
+    @IBAction func loopMenuInvoked(sender: NSMenuItem) {
+        toggleLoopCurrentSong()
     }
 
     @IBAction func playPauseClicked(button:NSButton) {
@@ -284,10 +297,14 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
             player?.play()
             updatePlayPause()
             
-            nextPlayer = avPlayerForSongIndex(index: playlist.nextIndex)
+            setNextPlayer()
         }
     }
     
+    private func setNextPlayer() {
+        let index = looping ? playlist.index : playlist.nextIndex
+        nextPlayer = avPlayerForSongIndex(index: index)
+    }
     private func avPlayerForSongIndex(index: Int) -> AVAudioPlayer? {
 
         guard let result = try? AVAudioPlayer(contentsOf: playlist.songs[index].url) else {
@@ -309,7 +326,9 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
             player?.play()
         }
         
-        playlist.advance()
+        if false == looping {
+            playlist.advance()
+        }
         
         showNotification()
     }
@@ -397,6 +416,10 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
         updatePlayPause()        
     }
     
+    private func toggleLoopCurrentSong() {
+        looping.toggle()
+    }
+    
     private func showCurrentSongInFinder() {
         if playlist.songs.count < 1 { return }
 
@@ -479,6 +502,13 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
                 self.playlist.addFrom(folder: selectedFolder)
             }
         }
+    }
+    
+    private func updateTableViewSelection() {
+        let index = playlist.index
+        tableView.selectRowIndexes(IndexSet(integer: index),
+                                   byExtendingSelection: false)
+        tableView.scrollRowToVisible(index)
     }
 }
 

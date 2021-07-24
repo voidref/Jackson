@@ -25,10 +25,8 @@ struct Song : CustomStringConvertible, Comparable, Hashable, Codable {
         }
     }
     
-    var hashValue: Int {
-        get {
-            return pPath.hashValue
-        }
+    func hash(into hasher: inout Hasher) {
+        pPath.hash(into: &hasher)
     }
     
     init(url: URL) {
