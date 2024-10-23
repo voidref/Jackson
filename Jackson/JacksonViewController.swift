@@ -27,6 +27,7 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
     @IBOutlet var playMenuItem: NSMenuItem!
     @IBOutlet var loopMenuItem: NSMenuItem!
     @IBOutlet var volumeMenuItem: NSMenuItem!
+    @IBOutlet var jumpMenuItem: NSMenuItem!
 
     
     var mainView: JacksonMainView {
@@ -233,6 +234,11 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
         toggleLoopCurrentSong()
     }
 
+    @IBAction func jumpToPlayingInvoked(sender: NSMenuItem) {
+        jumpToPlayingSong()
+    }
+
+
     @IBAction func playPauseClicked(button:NSButton) {
         togglePlayPause()
     }
@@ -329,7 +335,7 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
         if false == looping {
             playlist.advance()
         }
-        
+
         showNotification()
     }
     
@@ -419,23 +425,19 @@ class JacksonViewController: NSViewController, NSTableViewDelegate, AVAudioPlaye
     private func toggleLoopCurrentSong() {
         looping.toggle()
     }
-    
+
+    private func jumpToPlayingSong() {
+        if playlist.songs.count < 1 { return }
+        
+        tableView.scrollRowToVisible(playlist.index)
+    }
+
     private func showCurrentSongInFinder() {
         if playlist.songs.count < 1 { return }
 
         let item = playlist.songs[playlist.index]
-        guard let path = item.url.absoluteString.removingPercentEncoding,
-            let lastSlashIndex = path.lastIndex(of: "/") else {
-            print("bad path")
-            return
-        }
-        
-        let root = String(path.prefix(through: lastSlashIndex))
-        
-        NSWorkspace.shared.openFile(root)
-        if false == NSWorkspace.shared.selectFile(path, inFileViewerRootedAtPath: root) {
-            print("unable to select \(path), for some unknown reason, thanks Apple")
-        }
+
+        NSWorkspace.shared.activateFileViewerSelecting([item.url])
     }
     
     private func reduceVolume() {

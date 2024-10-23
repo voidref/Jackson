@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="18122" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="23502" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="18122"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="23502"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -22,6 +22,7 @@
         <viewController id="uyG-Sh-hDj" customClass="JacksonViewController" customModule="Jackson" customModuleProvider="target">
             <connections>
                 <outlet property="currentTime" destination="tBc-iZ-fFx" id="GS1-bA-EVS"/>
+                <outlet property="jumpMenuItem" destination="P7p-Na-4Ph" id="AjM-j4-SUZ"/>
                 <outlet property="loopMenuItem" destination="Hbf-fg-kBQ" id="MhN-Ca-8X0"/>
                 <outlet property="playMenuItem" destination="Zie-1r-Y16" id="vqq-sj-JbJ"/>
                 <outlet property="playPause" destination="gdc-Y6-6SM" id="j7d-M8-6h6"/>
@@ -104,6 +105,12 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="loopMenuInvokedWithSender:" target="uyG-Sh-hDj" id="GVu-Fj-VEr"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Jump To Playing" keyEquivalent="j" id="P7p-Na-4Ph" userLabel="Loop">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="jumpToPlayingInvokedWithSender:" target="uyG-Sh-hDj" id="3G8-Qi-QlP"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="sa0-ov-to4"/>
@@ -195,9 +202,9 @@ DQ
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="335" y="390" width="520" height="363"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
-            <view key="contentView" id="EiT-Mj-1SZ" customClass="JacksonMainView" customModule="Jackson" customModuleProvider="target">
-                <rect key="frame" x="0.0" y="0.0" width="540" height="363"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1512" height="944"/>
+            <view key="contentView" misplaced="YES" id="EiT-Mj-1SZ" customClass="JacksonMainView" customModule="Jackson" customModuleProvider="target">
+                <rect key="frame" x="0.0" y="0.0" width="520" height="363"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="26" horizontalPageScroll="10" verticalLineScroll="26" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dzR-hu-UQp">
@@ -229,7 +236,7 @@ DQ
                                                     <rect key="frame" x="11" y="1" width="522" height="23"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
-                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="aCz-ka-cC1">
+                                                        <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="aCz-ka-cC1">
                                                             <rect key="frame" x="8" y="-8" width="509" height="26"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="26" id="Kkk-MN-6aY"/>
@@ -273,14 +280,14 @@ DQ
                     </scrollView>
                     <button translatesAutoresizingMaskIntoConstraints="NO" id="gdc-Y6-6SM">
                         <rect key="frame" x="20" y="321" width="76" height="22"/>
-                        <constraints>
-                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="76" id="Bc2-jH-cuh"/>
-                            <constraint firstAttribute="height" constant="22" id="dP0-u7-Mu2"/>
-                        </constraints>
                         <buttonCell key="cell" type="bevel" title="Play" bezelStyle="regularSquare" alignment="center" refusesFirstResponder="YES" imageScaling="proportionallyDown" inset="2" id="EYV-el-4EV">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <constraints>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="76" id="Bc2-jH-cuh"/>
+                            <constraint firstAttribute="height" constant="22" id="dP0-u7-Mu2"/>
+                        </constraints>
                         <connections>
                             <action selector="playPauseClickedWithButton:" target="uyG-Sh-hDj" id="80d-Hw-esX"/>
                         </connections>
@@ -292,7 +299,7 @@ DQ
                             <action selector="sliderClickedWithSender:" target="uyG-Sh-hDj" id="Y1J-h5-NDn"/>
                         </connections>
                     </slider>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="tBc-iZ-fFx">
+                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="tBc-iZ-fFx">
                         <rect key="frame" x="102" y="308" width="38" height="16"/>
                         <constraints>
                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="34" id="eqU-ze-qbG"/>
@@ -303,7 +310,7 @@ DQ
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="bQE-YX-rET">
+                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="bQE-YX-rET">
                         <rect key="frame" x="484" y="308" width="38" height="16"/>
                         <constraints>
                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="34" id="fYN-OO-aDr"/>
@@ -335,64 +342,5 @@ DQ
             </view>
             <point key="canvasLocation" x="6" y="-197.5"/>
         </window>
-        <menuItem title="Open…" keyEquivalent="o" id="4I3-mK-lRz">
-            <connections>
-                <action selector="openDocument:" target="-1" id="bHd-Cx-6YA"/>
-            </connections>
-        </menuItem>
-        <menuItem title="Open…" keyEquivalent="o" id="f50-zQ-5KI">
-            <connections>
-                <action selector="openDocument:" target="-1" id="ZYR-Ad-boE"/>
-            </connections>
-        </menuItem>
-        <menuItem title="Menu" id="X0D-5I-JbR">
-            <modifierMask key="keyEquivalentModifierMask"/>
-            <menu key="submenu" title="Menu" id="UBv-y0-8mh">
-                <items>
-                    <menuItem title="Item" id="wXE-RI-L8B">
-                        <modifierMask key="keyEquivalentModifierMask"/>
-                    </menuItem>
-                </items>
-            </menu>
-        </menuItem>
-        <menu id="mYx-dn-Zex">
-            <items>
-                <menuItem title="Item 1" id="oeZ-rn-Vfv">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                </menuItem>
-                <menuItem title="Play" keyEquivalent=" " id="b8t-fR-ufR">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="playMenuInvokedWithSender:" target="uyG-Sh-hDj" id="YdA-RF-CXI"/>
-                    </connections>
-                </menuItem>
-                <menuItem isSeparatorItem="YES" id="FCR-Qd-2uc"/>
-                <menuItem title="Delete" id="RcY-Vp-h9h">
-                    <string key="keyEquivalent" base64-UTF8="YES">
-CA
-</string>
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="deleteBackwardWithSender:" target="uyG-Sh-hDj" id="ghh-Vh-6Ed"/>
-                    </connections>
-                </menuItem>
-                <menuItem title="Show in Finder" id="xOM-aW-gEn">
-                    <string key="keyEquivalent" base64-UTF8="YES">
-DQ
-</string>
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="showInFinderMenuInvokedWithSender:" target="uyG-Sh-hDj" id="3Bo-i6-tfg"/>
-                    </connections>
-                </menuItem>
-                <menuItem title="Item 2" id="Xoz-0F-azg">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                </menuItem>
-                <menuItem title="Item 3" id="gwI-HM-xbm">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                </menuItem>
-            </items>
-            <point key="canvasLocation" x="-194.5" y="91"/>
-        </menu>
     </objects>
 </document>
