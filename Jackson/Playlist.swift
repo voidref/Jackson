@@ -8,7 +8,7 @@
 
 import Cocoa
 
-protocol PlaylistDelegate: class {
+protocol PlaylistDelegate: AnyObject {
     func didUpdate(playlist: Playlist, position: Double)
     func didUpdate(playlist: Playlist, index: Int)
     func didUpdate(playlist: Playlist)
