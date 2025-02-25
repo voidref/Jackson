@@ -3,7 +3,7 @@ A barely working, fairly simple music player for macOS
 
 ![Jackson Screenshot](jackson.png)
 
-Get it [here](https://github.com/voidref/Jackson/raw/gh-pages/Jackson.zip) if you don't want to do the download-and-compile dance.
+Get it [here](https://github.com/user-attachments/files/17484023/Jackson.1.2.1.zip) if you don't want to do the download-and-compile dance.
 
 Adding songs:
 
